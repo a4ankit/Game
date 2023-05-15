@@ -1,0 +1,10 @@
+<apex:page controller="DownloadPdf" renderAs="pdf">
+    {!PDFData}
+    <!--<apex:form>
+        <apex:pageBlock>
+            <apex:pageBlockTable value="{!jsonstring}" var="res">
+                          {!jsonstring}
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>-->
+</apex:page>

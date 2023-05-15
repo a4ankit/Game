@@ -1,0 +1,45 @@
+<apex:page showHeader="true" standardStylesheets="false" sidebar="false">
+    <html>
+        <head>
+            <meta charset="urf-8"/>
+            <title> First Mapbox Map</title>
+            <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=mo' />
+            
+            <script src='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
+            <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
+                
+                <style type="text/css">
+                    body { margin:0; padding:0; }
+            #map { width: 1000px; height:500px; }
+            </style>
+            <script type="text/javascript">
+                window.onload = function(){
+                L.mapbox.accessToken = 'pk.eyJ1IjoiYTRhbmtpdCIsImEiOiJjanY3cXMya2IwMDh3NDNucXNhcmUwdGhsIn0.dEcKg_QphNHoAk1vP-mx0Q';
+                //Creating a variable to hold the reference of the map
+                var myMap = L.mapbox.map('map', null,{minZoom: 11}); //Here map is the div id where Mapbox map will be drwan
+                
+                //Define layers
+                var layers = {
+                    "Base Layer":L.mapbox.tileLayer('ENTER YOUR BASE PROJECT ID'),
+                    "Sudipta First Map":L.mapbox.tileLayer('ENTER YOUR FIRST PROJECT ID')
+                };
+                
+                layers["Base Layer"].addTo(myMap);
+                L.control.layers(layers).addTo(myMap);
+                
+                //Let's add the scale control
+                L.control.scale({imperial: false, position: "bottomright"}).addTo(myMap);
+                
+                //Let's add Attribution control
+                myMap.attributionControl.addAttribution('Sudipta 2015');
+                
+                //Let's make the mapbox point to Zurich
+                myMap.setView([47.3667,8.5500],12);  //This is Zurich's Coordinate
+            }
+            </script>
+        </head>
+        <body>
+            <div id="map"></div>
+        </body>
+    </html>
+</apex:page>

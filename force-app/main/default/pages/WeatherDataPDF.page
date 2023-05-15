@@ -1,0 +1,31 @@
+<apex:page controller="DownloadPdf" showHeader="false">
+    <apex:includeLightning />
+    <apex:form >
+        <apex:inputhidden id="hidData" value="{!PDFData}"/>
+        <apex:actionfunction name="jsGeneratePDF" action="{!PDF}" />
+        <div id="lightning" />
+        <script>
+        function saveData(data, callback){
+            var hidData = document.getElementById('{!$Component.hidData}');
+            hidData.value = JSON.stringify(data);
+            jsGeneratePDF();
+            if(typeof callback == 'function') callback();
+        }
+        function loadComponents(){
+            console.log("Loading lightning component: WeatherApplication");
+            
+            $Lightning.use("c:WeatherApplication", function() {
+                $Lightning.createComponent("c:WeatherComponent",
+                                           { 
+                                               sendData : saveData
+                                           },
+                                           "lightning",
+                                           function(cmp) {
+                                               // do some stuff
+                                           });
+            });
+        }
+        loadComponents();
+        </script>
+    </apex:form>
+</apex:page>

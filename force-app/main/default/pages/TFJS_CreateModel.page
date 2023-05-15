@@ -1,0 +1,534 @@
+<apex:page sidebar="false">
+    <title>Add image and train model with tensorflowJS</title> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1"> </script>
+    <script src="https://unpkg.com/@tensorflow-models/mobilenet"></script>
+    <body>
+    <div class="progress progress-bar progress-bar-striped progress-bar-animated mb-2">
+        Loading Model
+    </div>
+
+    <select id="model-selector" class="custom-select">
+        <option>mobilenet</option>
+    </select>
+
+    <h2>Prediction</h2>
+    <ol id="prediction-list"></ol>
+
+    <h2 class="ml-3">Images</h2>
+    <div>
+        <input type="file" id="imgload" accept="image/*" multiple="multiple" />
+        <img src="#" id="selected-image0" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image1" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image2" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image3" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image4" align="left" width="224" height="224" crossorigin="anonymous" />
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <img src="#" id="selected-image5" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image6" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image7" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image8" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image9" align="left" width="224" height="224" crossorigin="anonymous" />
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <img src="#" id="selected-image10" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image11" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image12" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image13" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image14" align="left" width="224" height="224" crossorigin="anonymous" />
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <img src="#" id="selected-image15" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image16" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image17" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image18" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image19" align="left" width="224" height="224" crossorigin="anonymous" />
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <img src="#" id="selected-image20" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image21" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image22" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image23" align="left" width="224" height="224" crossorigin="anonymous" />
+        <img src="#" id="selected-image24" align="left" width="224" height="224" crossorigin="anonymous" />
+    </div>
+    <button id="predict-button" class="btn btn-dark float-right">
+        Predict
+    </button>
+    </body>
+    <script>
+        //Show Images
+        $('document').ready(function () {
+            $("#imgload").change(function () {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image0').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+                if (this.files && this.files[1]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image1').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[1]);
+                }
+                if (this.files && this.files[2]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image2').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[2]);
+                }
+                if (this.files && this.files[3]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image3').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[3]);
+                }
+                if (this.files && this.files[4]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image4').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[4]);
+                }
+                if (this.files && this.files[5]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image5').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[5]);
+                }
+                if (this.files && this.files[6]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image6').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[6]);
+                }
+                if (this.files && this.files[7]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image7').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[7]);
+                }
+                if (this.files && this.files[8]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image8').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[8]);
+                }
+                if (this.files && this.files[9]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image9').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[9]);
+                }
+                if (this.files && this.files[10]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image10').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[10]);
+                }
+                if (this.files && this.files[11]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image11').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[11]);
+                }
+                if (this.files && this.files[12]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image12').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[12]);
+                }
+                if (this.files && this.files[13]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image13').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[13]);
+                }
+                if (this.files && this.files[14]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image14').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[14]);
+                }
+                if (this.files && this.files[15]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image15').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[15]);
+                }
+                if (this.files && this.files[16]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image16').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[16]);
+                }
+                if (this.files && this.files[17]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image17').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[17]);
+                }
+                if (this.files && this.files[18]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image18').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[18]);
+                }
+                if (this.files && this.files[19]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image19').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[19]);
+                }
+                if (this.files && this.files[20]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image20').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[20]);
+                }
+                if (this.files && this.files[21]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image21').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[21]);
+                }
+                if (this.files && this.files[22]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image22').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[22]);
+                }
+                if (this.files && this.files[23]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image23').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[23]);
+                }
+                if (this.files && this.files[24]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#selected-image24').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[24]);
+                }
+
+            });
+        });
+    </script>
+
+    <script>
+
+        $("#model-selector").ready(function () {
+            loadModel($("#model-selector").val());
+        })
+
+        let model;
+        async function loadModel(name) {
+            model = tf.sequential();
+        }
+
+        $("#predict-button").click(async function () {
+            let image = $('#selected-image0').get(0);
+            let image1 = $('#selected-image1').get(0);
+            let image2 = $('#selected-image2').get(0);
+            let image3 = $('#selected-image3').get(0);
+            let image4 = $('#selected-image4').get(0);
+            let image5 = $('#selected-image5').get(0);
+            let image6 = $('#selected-image6').get(0);
+            let image7 = $('#selected-image7').get(0);
+            let image8 = $('#selected-image8').get(0);
+            let image9 = $('#selected-image9').get(0);
+            let image10 = $('#selected-image10').get(0);
+            let image11 = $('#selected-image11').get(0);
+            let image12 = $('#selected-image12').get(0);
+            let image13 = $('#selected-image13').get(0);
+            let image14 = $('#selected-image14').get(0);
+            let image15 = $('#selected-image15').get(0);
+            let image16 = $('#selected-image16').get(0);
+            let image17 = $('#selected-image17').get(0);
+            let image18 = $('#selected-image18').get(0);
+            let image19 = $('#selected-image19').get(0);
+            let image20 = $('#selected-image20').get(0);
+            let image21 = $('#selected-image21').get(0);
+            let image22 = $('#selected-image22').get(0);
+            let image23 = $('#selected-image23').get(0);
+            let image24 = $('#selected-image24').get(0);
+            console.log('image:::', image);
+            console.log('image1:::', image1);
+            console.log('image2:::', image2);
+            console.log('image3:::', image3);
+            console.log('image4:::', image4);
+            console.log('image5:::', image5);
+            console.log('image6:::', image6);
+            console.log('image7:::', image7);
+            console.log('image8:::', image8);
+            console.log('image9:::', image9);
+            console.log('image10:::', image10);
+            console.log('image11:::', image11);
+            console.log('image12:::', image12);
+            console.log('image13:::', image13);
+            console.log('image14:::', image14);
+            console.log('image15:::', image15);
+            console.log('image16:::', image16);
+            console.log('image17:::', image17);
+            console.log('image18:::', image18);
+            console.log('image19:::', image19);
+            console.log('image20:::', image20);
+            console.log('image21:::', image21);
+            console.log('image22:::', image22);
+            console.log('image23:::', image23);
+            console.log('image24:::', image24);
+            let tensorarr = [];
+            let tensor1 = preprocessImage(image, $("#model-selector").val());
+            tensorarr.push(tensor1);
+            let tensor2 = preprocessImage(image1, $("#model-selector").val());
+            tensorarr.push(tensor2);
+            let tensor3 = preprocessImage(image2, $("#model-selector").val());
+            tensorarr.push(tensor3);
+            let tensor4 = preprocessImage(image3, $("#model-selector").val());
+            tensorarr.push(tensor4);
+            let tensor5 = preprocessImage(image4, $("#model-selector").val());
+            tensorarr.push(tensor5);
+            let tensor6 = preprocessImage(image5, $("#model-selector").val());
+            tensorarr.push(tensor6);
+            let tensor7 = preprocessImage(image6, $("#model-selector").val());
+            tensorarr.push(tensor7);
+            let tensor8 = preprocessImage(image7, $("#model-selector").val());
+            tensorarr.push(tensor8);
+            let tensor9 = preprocessImage(image8, $("#model-selector").val());
+            tensorarr.push(tensor9);
+            let tensor10 = preprocessImage(image9, $("#model-selector").val());
+            tensorarr.push(tensor10);
+            let tensor11 = preprocessImage(image10, $("#model-selector").val());
+            tensorarr.push(tensor11);
+            let tensor12 = preprocessImage(image11, $("#model-selector").val());
+            tensorarr.push(tensor12);
+            let tensor13 = preprocessImage(image12, $("#model-selector").val());
+            tensorarr.push(tensor13);
+            let tensor14 = preprocessImage(image13, $("#model-selector").val());
+            tensorarr.push(tensor14);
+            let tensor15 = preprocessImage(image14, $("#model-selector").val());
+            tensorarr.push(tensor15);
+            let tensor16 = preprocessImage(image15, $("#model-selector").val());
+            tensorarr.push(tensor16);
+            let tensor17 = preprocessImage(image16, $("#model-selector").val());
+            tensorarr.push(tensor17);
+            let tensor18 = preprocessImage(image17, $("#model-selector").val());
+            tensorarr.push(tensor18);
+            let tensor19 = preprocessImage(image18, $("#model-selector").val());
+            tensorarr.push(tensor19);
+            let tensor20 = preprocessImage(image19, $("#model-selector").val());
+            tensorarr.push(tensor20);
+            let tensor21 = preprocessImage(image20, $("#model-selector").val());
+            tensorarr.push(tensor21);
+            let tensor22 = preprocessImage(image21, $("#model-selector").val());
+            tensorarr.push(tensor22);
+            let tensor23 = preprocessImage(image22, $("#model-selector").val());
+            tensorarr.push(tensor23);
+            let tensor24 = preprocessImage(image23, $("#model-selector").val());
+            tensorarr.push(tensor24);
+            let tensor25 = preprocessImage(image24, $("#model-selector").val());
+            tensorarr.push(tensor25);
+            let resize_image = [];
+            let resize;
+            for (var i = 0; i < tensorarr.length; i++) {
+                resize = tf.reshape(tensorarr[i], [1, 224, 224, 3], 'resize');
+                console.log('resize:::', resize);
+                resize_image.push(resize);
+            }
+            // Labels
+            //const label = ['Store Shelf','Store Shelf','Store Shelf','Store Shelf','Store Shelf','Store Shelf','Store Shelf','Store Shelf','Store Shelf','Store Shelf','Rejected','Rejected','Rejected','Rejected','Rejected','Floor_Rejected','Floor_Rejected','Floor_Rejected','Floor_Rejected','Floor_Rejected','Floor_Rejected','Floor_Rejected','Floor_Rejected','Floor_Rejected','Floor_Rejected'];
+            const label = ['Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Store Shelf', 'Rejected', 'Rejected', 'Rejected', 'Rejected', 'Rejected', 'Rejected', 'Rejected', 'Rejected', 'Rejected', 'Rejected'];
+
+            const setLabel = Array.from(new Set(label));
+            let ysarr = [];
+            const ys = tf.oneHot(tf.tensor1d(label.map((a) => setLabel.findIndex(e => e === a)), 'int32'), 10)
+            console.log('ys:::' + ys);
+            const y = tf.reshape(ys, [-1]);
+            y.print();
+            const d = y.slice([0], [10]);
+            d.print();
+            ysarr.push(d);
+            const e = y.slice([10], [10]);
+            e.print();
+            ysarr.push(e);
+            const f = y.slice([20], [10]);
+            f.print();
+            ysarr.push(f);
+            const g = y.slice([30], [10]);
+            g.print();
+            ysarr.push(g);
+            const h = y.slice([40], [10]);
+            h.print();
+            ysarr.push(h);
+            const m = y.slice([50], [10]);
+            m.print();
+            ysarr.push(m);
+            const n = y.slice([60], [10]);
+            n.print();
+            ysarr.push(n);
+            const o = y.slice([70], [10]);
+            o.print();
+            ysarr.push(o);
+            const p = y.slice([80], [10]);
+            p.print();
+            ysarr.push(p);
+            const x = y.slice([90], [10]);
+            x.print();
+            ysarr.push(x);
+            const s = y.slice([100], [10]);
+            s.print();
+            ysarr.push(s);
+            const r = y.slice([110], [10]);
+            r.print();
+            ysarr.push(r);
+            const w = y.slice([120], [10]);
+            w.print();
+            ysarr.push(w);
+            const u = y.slice([130], [10]);
+            u.print();
+            ysarr.push(u);
+            const v = y.slice([140], [10]);
+            v.print();
+            ysarr.push(v);
+            const s1 = y.slice([150], [10]);
+            s1.print();
+            ysarr.push(s1);
+            const r1 = y.slice([160], [10]);
+            r1.print();
+            ysarr.push(r1);
+            const w1 = y.slice([170], [10]);
+            w1.print();
+            ysarr.push(w1);
+            const u1 = y.slice([180], [10]);
+            u1.print();
+            ysarr.push(u1);
+            const v1 = y.slice([190], [10]);
+            v1.print();
+            ysarr.push(v1);
+            const s2 = y.slice([200], [10]);
+            s2.print();
+            ysarr.push(s2);
+            const r2 = y.slice([210], [10]);
+            r2.print();
+            ysarr.push(r2);
+            const w2 = y.slice([220], [10]);
+            w2.print();
+            ysarr.push(w2);
+            const u2 = y.slice([230], [10]);
+            u2.print();
+            ysarr.push(u2);
+            const v2 = y.slice([240], [10]);
+            v2.print();
+            ysarr.push(v2);
+            console.log('ysarr', ysarr);
+
+            //Adding Layers to model
+            model.add(tf.layers.conv2d({
+                inputShape: [224, 224, 3],
+                kernelSize: 5,
+                filters: 8,
+                strides: 1,
+                activation: 'relu',
+                kernelInitializer: 'VarianceScaling'
+            }));
+            model.add(tf.layers.maxPooling2d({ poolSize: 2, strides: 2 }));
+            model.add(tf.layers.maxPooling2d({ poolSize: 2, strides: 2 }));
+            model.add(tf.layers.flatten({}));
+            model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
+            model.add(tf.layers.dense({ units: 10, activation: 'softmax' }));
+
+            //Compiling Model
+            model.compile({
+                loss: 'meanSquaredError',
+                optimizer: 'sgd'
+            })
+            console.log('model:::' + model);
+
+            // Train the model using the data.
+            let tesnor_dim = [];
+            let tensr;
+            for (var j = 0; j < resize_image.length; j++) {
+                console.log('resize_image', resize_image);
+                tensr = tf.expandDims(ysarr[j], 0);
+                tesnor_dim.push(tensr);
+                console.log('tesnor_dim', tesnor_dim);
+                console.log('before resize_image[j]', resize_image[j]);
+                console.log('before tesnor_dim[j]', tesnor_dim[j]);
+                await model.fit(resize_image[j], tesnor_dim[j], { epochs: 100 }).then((loss) => {
+                    console.log('resize_image.get[j]', resize_image[j]);
+                    console.log('tesnor_dim[j]', tesnor_dim[j]);
+                    console.log('loss', loss);
+                    const t = model.predict(resize_image[j]);
+                    console.log('Prediction:::' + t);
+                    pred = t.argMax(1).dataSync(); // get the class of highest probability
+                    const labelsPred = Array.from(pred).map(e => setLabel[e]);
+                    console.log('labelsPred:::' + labelsPred);
+
+                }).catch((e) => {
+                    console.log(e.message);
+                })
+            }    //Save Model
+            const saveResults = await model.save('downloads://my-model-1');
+            console.log(saveResults);
+        });
+        //Processing Image to tensor
+        function preprocessImage(image, modelName) {
+            let tensor = tf.browser.fromPixels(image)
+                .resizeNearestNeighbor([224, 224])
+                .toFloat();
+            console.log('tensor pro:::', tensor);
+            if (modelName == undefined) {
+                return tensor.expandDims();
+            }
+            if (modelName == "mobilenet") {
+                let offset = tf.scalar(127.5);
+                console.log('offset:::', offset);
+                return tensor.sub(offset)
+                    .div(offset)
+                    .expandDims();
+            }
+            else {
+                throw new Error("UnKnown Model error");
+            }
+        }
+    </script>
+</apex:page>

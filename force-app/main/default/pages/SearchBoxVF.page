@@ -1,0 +1,27 @@
+<apex:page controller="ExmpleController">
+    
+    <script>
+    function search(){
+        doSearch();
+    }
+    
+    </script>
+    
+    <apex:form >
+        <apex:actionFunction name="doSearch" action="{!searchAccounts}" reRender="accountTable"/>
+        <apex:pageBlock >
+            
+            <apex:outputText >Account Name</apex:outputText>
+            <apex:inputText value="{!name}" onkeyup="search();"/>
+            <apex:pageBlockSection columns="3">
+                
+                <apex:pageBlockTable id="accountTable" value="{!accounts}" var="acc">
+                    <apex:column value="{!acc.Name}"/>
+                </apex:pageBlockTable>
+                
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+        
+    </apex:form>
+</apex:page>

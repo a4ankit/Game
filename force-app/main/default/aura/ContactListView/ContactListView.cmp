@@ -1,0 +1,9 @@
+<aura:component controller = 'ShowContactList'>
+    <aura:attribute name="Selectedvalue" type="string" default="New"/>
+    <lightning:select name ='List View' label = 'List View' onchange='{!c.myAction}' value='{v.Selectedvalue}' aura:id="statusPicklist" >
+        <option value="">choose one...</option>
+        <option value="New">New</option>
+        <option aura:id ='allcontacts' value = 'All Contact'>All Contact</option>
+        <option aura:id ='recentcontacts' value = 'Recent Contact'>Recent Contact</option>
+    </lightning:select>    
+</aura:component>

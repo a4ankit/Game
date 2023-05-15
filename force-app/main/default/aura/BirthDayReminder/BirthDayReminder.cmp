@@ -1,0 +1,84 @@
+<aura:component controller="ListViewController" implements="force:appHostable,force:hasRecordId,flexipage:availableForAllPageTypes">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="ContactListViewList" type="ListView[]"/>
+    <aura:attribute name="ContactList" type="Contact[]"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="isSending" type="boolean" />
+    <!-- Attribute Declration For Pagination -->
+    <aura:attribute name="PaginationList" type="Contact"/>
+    <aura:attribute name="startPage" type="Integer" />
+    <aura:attribute name="endPage" type="Integer"/>
+    <aura:attribute name="totalRecords" type="Integer"/>
+    <aura:attribute name="pageSize" type="Integer" default="4"/>
+    <!-- Attribute Declration For Pagination End-->  
+    <aura:attribute name="inputSize" type="String" default="30"/>
+    <table class="slds-table slds-table_fixed-layout">
+        <tr>
+            <td>
+                <div class="slds-align_absolute-left">
+                    <div>Contact View :</div>
+                    <div class="slds-size_1-of-4">
+                        <ui:inputSelect class="slds-select" aura:id="selectedViewName" label="" change="{!c.getFilteredContact}">
+                            <aura:iteration items="{!v.ContactListViewList}" var="listview">
+                                <ui:inputSelectOption text="{!listview.Name}" label="{!listview.Name}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>
+                    </div>    
+                </div>
+   			 </td>
+        </tr>
+    </table>
+    <table class="slds-table slds-table_fixed-layout">        
+        <thead>
+            <tr class="slds-text-heading_label">
+                <th scope="col"><div class="slds-truncate" title="Edit">Name</div></th>
+                <th scope="col"><div class="slds-truncate" title="Name">Date of birth</div></th>            
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Use the Apex model and controller to fetch server side data -->
+            <aura:iteration items="{!v.ContactList}" var="con">
+                <tr>
+                    <td>
+                        <div title="">
+                            
+                            {!con.Name}</div>
+                    </td>
+                    <td>
+                        <div title="">
+                            <lightning:formattedDateTime value="{!con.Birthdate}" timeZone="Europe/Berlin"  month="short" day="numeric"/>
+                            </div>
+                    </td>
+                </tr>
+            </aura:iteration>
+            <tr>
+                <td>
+                    <div class="slds-align_absolute-center">
+                        <a href="javascript:void(0)" onclick="{!c.previous}" disabled="{!v.startPage == 0}">
+                                  Prev
+                        </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="javascript:void(0)" onclick="{!c.next}" disabled="{!v.endPage >= v.totalRecords}">
+                                   Next 
+                        </a>
+                        <!--<lightning:button label="Previous" disabled="{!v.startPage == 0}"  
+                                          onclick="{!c.previous}" />         
+                        <lightning:button aura:id="previousPage" label="Next" disabled="{!v.endPage >= v.totalRecords}" 
+                                          onclick="{!c.next}" />-->   
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="slds-align_absolute-center"> 
+                        <div title="" class="slds-size_1-of-7"><ui:inputText  class="slds-input" aura:id="inputNumber" label="Next " value="{!v.inputSize}" /></div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;<div title="">Days</div>
+                        &nbsp;&nbsp;&nbsp;<div title=""><lightning:button label="Find" onclick="{!c.find}"/></div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>       
+</aura:component>

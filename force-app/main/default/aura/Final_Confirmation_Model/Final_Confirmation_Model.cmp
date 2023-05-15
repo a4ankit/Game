@@ -1,0 +1,29 @@
+<aura:component controller="BulkStatusUpdateController" >
+    <!-- Attriute to show header Text -->
+    <aura:attribute name="headerText" type="String" default="default Header" />
+    <aura:attribute name="selectedContactIds" type="String[]"/>
+    <aura:attribute name="selectedStatusValue" type="String"/>
+    <!-- Modal Code -->
+    <div class="chooseStatus" style="height: 750px; width : 300px">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style="width: 28% !important;">
+                <!-- Modal Header -->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close" class="slds-modal__close" size="large" variant="bare" alternativeText="Close" onclick="{! c.closeModal }"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!v.headerText}</h2>
+                </header>
+                <!-- Main Body of Modal -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:card><h1 class="slds-text-heading_medium slds-hyphenate"> Are you sure ? </h1>
+                    </lightning:card><br/><br/>
+                </div>
+                <!-- Footer of Modal -->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.doSubmitStatusValue}" />
+                    <lightning:button variant="brand" label="Cancel" title="Cancel" onclick="{!c.closeModal}" />   
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</aura:component>

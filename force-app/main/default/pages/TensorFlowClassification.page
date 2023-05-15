@@ -1,0 +1,78 @@
+<apex:page id="PageId" showheader="false">
+    <apex:slds />
+    <head>
+        <title>Image Classifier with TensorFlowJS</title> 
+    </head>
+    <body>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.11.2">
+        </script>
+    </body>
+    <img id="imgshow" src="{!$Resource.cat}" crossorigin="anonymous" width="224" height="224" />
+    <button onClick="learnlinear()" lable = "Predict">Predict</button>
+    <script>
+    async function learnlinear()
+    {
+        //img data set
+        const imageHTML = document.getElementById('imgshow'); 
+        console.log('imageHTML::'+imageHTML.src);
+        
+        //convert to tensor 
+        const tensorImg = tf.fromPixels(imageHTML);
+        tensorImg.data().then(async function (stuffTensImg){
+            console.log('stuffTensImg::'+stuffTensImg.toString());
+        });
+        
+        const resize_image = tf.reshape(tensorImg, [1, 224, 224, 3],'resize');
+        console.log('resize_image'+resize_image);
+        
+        const model = await tf.sequential();
+        
+        console.log(':::::::'+JSON.stringify(model));
+        model.add(tf.layers.conv2d({
+            inputShape: [imageHTML.heigth, imageHTML.width, 1],
+            kernelSize: 3,
+            filters: 16,
+            activation: 'relu'
+        }));
+        
+        model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}));
+        
+        
+        model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
+        
+        model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}));
+        
+        model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
+        
+        model.add(tf.layers.flatten({}));
+        
+        model.add(tf.layers.dense({units: 64, activation: 'relu'}));
+        
+        model.add(tf.layers.dense({units: 10, activation: 'softmax'}));
+        
+        const optimizer = 'rmsprop';
+        
+        model.compile({
+            optimizer,
+            loss: 'categoricalCrossentropy',
+            metrics: ['accuracy'],
+        });
+        
+        // Use ADAM optimizer with learning rate of 0.0005 and MSE loss
+        model.compile({
+            optimizer: tf.train.adam(0.0005),
+            loss: 'meanSquaredError',
+        });
+        console.log('model.compile',model.compile);
+        
+        await model.fit(resize_image, {epochs: 500});
+        console.log('model.fit',model.fit);
+        
+        const saveResult = await model.save();
+        console.log('saveResult',saveResult);
+        
+        model.predict(resize_image.expandDims(0)).print()
+        console.log('model.predict',model.predict);
+    }
+    </script>
+</apex:page>

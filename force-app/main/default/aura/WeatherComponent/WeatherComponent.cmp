@@ -1,0 +1,77 @@
+<aura:component controller="WeatherController">
+    <aura:attribute name="city" type="String" default="Delhi"/>
+    <aura:attribute name="startTime" type="DateTime" />
+    <aura:attribute name="endTime" type="DateTime"/>
+    <aura:attribute name="currentDate" type="Date"/>
+    <aura:attribute name="dataList" type="list" />
+    <aura:attribute name="sendData" type="object"/>
+    <div class="slds-align_absolute-center">
+        <lightning:button variant="brand" label="Get History" title="Brand action" onclick="{! c.handleClick }" />
+    </div>
+    <div class="slds-align_absolute-center">
+        <lightning:input name="input3" label="City Name" placeholder="type here..." value="{! v.city }"/>
+    </div>
+    <div class="slds-align_absolute-center">
+        <lightning:input type="datetime" name="Date1" label="Start Date" value="{!v.startTime}"/>
+    </div>
+    <div class="slds-align_absolute-center">
+        <lightning:input type="datetime" name="Date2" label="End Date" value="{!v.endTime}"/>
+    </div>
+    <div class="slds-align_absolute-center">
+        <lightning:button label="Download Document" onclick="{!c.downloadDocument}" />
+    </div>
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+        <thead>
+            <tr class="slds-text-title--caps">
+                <th scope="col">
+                    <div class="slds-truncate" title="First Name">Date</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="First Name">City</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Last Name">Tempreture</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Email">Pressure</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="First Name">Humidity</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Last Name">Temp max</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Email">Temp min</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.dataList}" var="ct">
+                <tr>
+                    <th scope="row" data-label="First Name">
+                        <lightning:formattedDateTime value="{!ct.CreatedDate}"/>
+                    </th>
+                    <th scope="row" data-label="First Name">
+                        <div class="slds-truncate" title="{! ct.city }">{! ct.Name }</div>
+                    </th>
+                    <td data-label="Last Name">
+                        <div class="slds-truncate" title="{! ct.devsfdx__Tempreture__c }">{! ct.devsfdx__Tempreture__c }</div>
+                    </td>
+                    <td data-label="Email">
+                        <div class="slds-truncate" title="{! ct.devsfdx__Pressure__c }">{! ct.devsfdx__Pressure__c }</div>
+                    </td>
+                    <th scope="row" data-label="First Name">
+                        <div class="slds-truncate" title="{! ct.devsfdx__Humidity__c }">{! ct.devsfdx__Humidity__c }</div>
+                    </th>
+                    <td data-label="Last Name">
+                        <div class="slds-truncate" title="{! ct.devsfdx__Temp_min__c }">{! ct.devsfdx__Temp_min__c }</div>
+                    </td>
+                    <td data-label="Email">
+                        <div class="slds-truncate" title="{! ct.devsfdx__Temp_max__c }">{! ct.devsfdx__Temp_max__c }</div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+</aura:component>

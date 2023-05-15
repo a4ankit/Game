@@ -1,0 +1,19 @@
+<aura:component controller="FilesListApexController">
+    <aura:handler name="init" value="{!this}" action="{!c.myAction}"/>
+    <aura:attribute name="Documents" type="Attachment[]" access="global"/>
+    <aura:attribute type="List" name="acctList"/>
+    <span class="text-blue">
+        <aura:if isTrue="{! !empty(v.Documents) }">
+            <aura:iteration items="{!v.Documents}" var="doc">
+                <li class="slds-list__item slds-grid slds-truncate_container slds-m-bottom--medium">
+                    <lightning:icon iconName="{! 'doctype:' + doc.ContentType}" size="small" class="slds-m-right--small" />
+                    <span class="slds-truncate" title="{!doc.Title}"><a download="download" href="{! v.sitePrefix + '/sfc/servlet.shepherd/version/download/'+ doc.Id}">{!doc.Title}</a></span>
+                </li>
+            </aura:iteration>
+            <aura:set attribute="else">
+                <div>
+                </div>
+            </aura:set>
+        </aura:if>
+    </span>
+</aura:component>

@@ -1,0 +1,48 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="classified" type="List"/>
+    <aura:attribute name="notclassified" type="List"/>    
+    <aura:attribute name="notclassifiedImages" type="Object"/>
+    <aura:attribute name="ClassifiedImages" type="Object"/>
+    <aura:attribute name="attrCustomModel" type="Object"/>
+    <aura:attribute name="customModel" type="Object" />
+    <aura:attribute name="selectedImage" type="Object" />
+    <ltng:require scripts="{!$Resource.tensorflowjs}" afterScriptsLoaded="{!c.doTfJs}" /> 
+    <ltng:require scripts="{!$Resource.jQuery}" afterScriptsLoaded="{!c.doLoadJquery}" /> 
+    <div class="row">
+        <div class="col-3">
+            <select id="model-selector" class="custom-select" >
+                <option>mobilenet</option>
+            </select>
+        </div>
+    </div>
+    Load Model : <input type="file" id="load" multiple="multiple" /><br/>
+    <br/>
+    <br/>
+    <div class="row">
+        Select Image : <input id ="image-selector" class="form-control border-0" type="file"/>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2 class="ml-3">Image</h2>
+            <img id="selected-image" class="ml-3" src="" crossorigin="anonymous" width="400" height="300"/>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="col-6">
+        <lightning:button variant="base" label="Predict" title="Base action" onclick="{! c.doPrediction}" class="slds-button slds-button_brand"/>
+    </div>
+    <br/>
+    <br/>
+    <b>Results..</b>
+    <div class="row">
+        <div class="col">
+            <h2>Prediction</h2>
+            <b><ol id="prediction-list"></ol></b>
+            <h2>
+                Confidance Value
+            </h2>
+            <b><ol id="confidance-value"></ol></b>
+        </div>
+    </div>
+</aura:component>

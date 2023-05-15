@@ -1,0 +1,17 @@
+<apex:page controller="VerifyPhone" showHeader="false" sidebar="false" standardStylesheets="true">
+    <apex:Pagemessages id="msg"/>
+    <apex:form >
+        <p><b>Verify Phone</b><br /></p>
+        <apex:panelGrid columns="2" style="margin-top:1em;">
+            <p><b>Phone Number</b><br />
+                <apex:inputText required="true" id="mobileNo" value="{!mobileNo}"/>
+                {!mobileNo}
+            </p>
+            <p><b>OTP(One Time Password)</b><br />
+                <apex:inputText id="password" value="{!password}"/>
+                {!password}            
+            </p>
+            <apex:commandButton action="{!processSms}" value="Generate OTP" id="generateOtp"  immediate="true"/>
+        </apex:panelGrid>
+    </apex:form>
+</apex:page>

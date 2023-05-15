@@ -1,0 +1,25 @@
+<apex:page standardController="Account" sidebar="false" extensions="myAccount">    
+    <style type="text/css">
+        .img{width:100px !important;} 
+        .bPageBlock .detailList tr td, .bPageBlock .detailList tr th, .hoverDetail .bPageBlock .detailList tr td, .hoverDetail .bPageBlock .detailList tr th { border-bottom: none !important;}
+        .OptPanel{width:50%;float:left;padding-top:20px;borde:none !important; }   
+        .Optpanel1{float:right;padding-right:100px;}   
+        .bPageBlock, .individualPalette .bPageBlock
+        {
+        border: none !important;
+        background:none !important;
+        }
+        
+    </style>
+    <apex:form >
+        <apex:outputpanel layout="block" styleclass="Optpanel1">
+            <apex:pageblock mode="maindetail" >           
+                <apex:pageblocksection columns="1" >
+                    <apex:image value="{!photourl}" url="{!photourl}"  rendered="{!if((photourl == ''),false,true)}" styleclass="img">   </apex:image>
+                    <apex:inputFile value="{!photo}"> </apex:inputFile> 
+                    <apex:commandButton value="Upload photo" action="{!uploadphoto}" />   
+                </apex:pageblocksection>
+            </apex:pageblock>
+        </apex:outputpanel>
+    </apex:form>
+</apex:page>

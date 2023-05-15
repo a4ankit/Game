@@ -1,0 +1,27 @@
+<aura:component >
+    <aura:attribute name="contact" type="Contact" />
+    <div class="slds-box slds-theme_shade" > 
+    <lightning:card variant="Narrow" title="{!v.contact.Name}" 
+                    iconName="standard:contact">
+        <aura:set attribute="actions">
+            <lightning:button name="details" label="Details" onclick="{!c.goToRecord}" />
+        </aura:set>    
+        <aura:set attribute="footer">
+            <lightning:badge label="{!v.contact.Email}"/>
+        </aura:set>
+        <p class="slds-p-horizontal_small">
+            {!v.contact.Phone}
+        </p>
+        <p class="slds-p-horizontal_small">
+            {!v.contact.MailingStreet}
+        </p>
+        <div class="slds-p-around_x-small" >
+            <lightning:layout >
+                
+                Hello
+                
+            </lightning:layout>
+        </div>
+    </lightning:card>
+    </div>
+</aura:component>

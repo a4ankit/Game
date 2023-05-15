@@ -1,0 +1,24 @@
+<aura:component controller = 'ProjectCalloutService' implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="classified" type="List"/>
+    <aura:attribute name="notclassified" type="List"/>    
+	<aura:attribute name="notclassifiedImages" type="Object"/>
+    <aura:attribute name="ClassifiedImages" type="Object"/>
+    <aura:attribute name="AllTypeImages" type="Object"/>
+    <aura:attribute name="customModel" type="Object" />
+    <aura:attribute name="fileHeader" type="List" />
+    <aura:attribute name="fileColumnLength" type="Integer" />
+    <ltng:require scripts="{!$Resource.tensorflowjs}" afterScriptsLoaded="{!c.doTfJs}" /> 
+    <ltng:require scripts="{!$Resource.jQuery}" afterScriptsLoaded="{!c.doLoadJquery}" />
+    <aura:attribute name="listCustomSettingVariable" type="TensorFlowLabel__c" default="{'sobject':'TensorFlowLabel__c', 'Name':'', 'devsfdx__Header__c':''}"/>
+
+    <div class="slds-page-header">
+        <h1> <b>This Component is used to fetch dataset of images from CSV and create a custom model using these images : </b> </h1>
+    </div>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;<lightning:input type="file" label="Choose a CSV File to Train a custom model:" name="Mapping" multiple="false" accept=".csv" onchange="{!c.readCSV}" /><br/><br/><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<lightning:button variant="base" label="Train and Save Model" title="Base action" onclick="{! c.doTrainModel}" class="slds-button slds-button_brand"/>
+    <br/>
+    
+    
+    
+</aura:component>

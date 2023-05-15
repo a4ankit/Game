@@ -1,0 +1,142 @@
+<aura:component controller="MapEntitesCtl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this }" action="{!c.initialize }"/>
+    <!-- attribute declaration -->
+    <aura:attribute name="objectName" type="String" description="Name of object"/>
+    <aura:attribute name="availableList" type="List" default="[]" description="get all available objects"/>
+    <aura:attribute name="availFieldList" type="List" default="[]" description="get all available Fields"/>
+    <aura:attribute name="isSelected" type="Boolean" default="false"/>
+    <aura:attribute name="isFilterd" type="Boolean" default="false"/>
+    <aura:attribute name="OperatorsList" type="List" default="[]" description="avaliable operators"/>
+    <aura:attribute name="criteriaList" type="object[]" />
+    <aura:attribute name="filterlogic" type="String" />
+    <aura:attribute name="selectedFieldType" type="String"/>
+    <aura:attribute name="isOperationVisible" type="Boolean" default="true"/>
+    <aura:attribute name="fieldTypeDateTime" type="DateTime" default=""/>
+    <aura:attribute name="fieldTypeDate" type="Date" default=""/>
+    <aura:attribute name="isCheckboxSelect" type="Boolean" default="false" />
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <div class="slds-form--stacked slds-p-around_small">
+        <lightning:input name="filterName" label="Filter Name" />
+        <lightning:textarea name="description" label="Description" />
+        <lightning:select aura:id="objName" name="Objects" label="Base Objects" value="{!v.objectName}" onchange="{!c.onselectObject}">
+            <option value="">--Select your Object--</option> 
+            <aura:iteration items="{!v.availableList}" var="val">
+                <option text="{!val}"></option>
+            </aura:iteration>
+        </lightning:select>
+        <aura:if isTrue="{!v.isSelected}">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-text-title_caps">
+                        <th scope="col">
+                            <div class="slds-truncate">#</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Fields">Fields</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Operation">Operation</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="criteriavalue">value</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="action">Action</div>
+                        </th>  
+                    </tr>
+                </thead> 
+                <tbody> 
+                    <aura:iteration items="{!v.criteriaList}" var="acc" indexVar="index">
+                        <tr>
+                            <td>
+                                {!index + 1}
+                            </td>
+                            <td> 
+                                <!--Fields -->
+                                <lightning:select aura:id="fldname" name="Fields" label="" value="{!acc.FieldName}" onchange="{!c.selectField}">                          
+                                    <option value="">--None--</option> 
+                                    <aura:iteration items="{!v.availFieldList}" var="val" >
+                                        <option text="{!val}" value="{!val}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                            <td> 
+                                <!--Operators-->
+                                <lightning:select disabled="{!v.isOperationVisible}" name="select1" label="" value="{!acc.operators}">
+                                    <aura:iteration items="{!v.OperatorsList}" var="val" >
+                                        <option text="{!val}" value="{!val}"></option>
+                                    </aura:iteration>                           
+                                </lightning:select>
+                            </td>
+                            <td  >
+                                <!--Values-->
+                                <aura:if isTrue="{!or(v.selectedFieldType == 'STRING',v.selectedFieldType == 'CURRENCY')}">
+                                    <lightning:input aura:id="inputString" name="stringValue" label="" value="{!acc.userValue}" />
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'DATETIME'}">
+                                    <lightning:input aura:id="inputDate" value="{!v.fieldTypeDateTime}" type="datetime" placeholder="" />
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'DATE'}">
+                                    <lightning:input aura:id="inputDate" value="{!v.fieldTypeDate}" type="date" placeholder="" />
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'BOOLEAN'}">
+                                    <lightning:input aura:id="inputBoolean" type="toggle" name="isCheckboxSelect" checked="{!v.isCheckboxSelect}" onchange="{!c.doToggle}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'REFERENCE'}">
+                                    <lightning:input aura:id="inputLookup" type="reference" name="lookup" label="" value="{!acc.userValue}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'TEXTAREA'}">
+                                    <lightning:input aura:id="inputDescription" type="textarea" value="{!acc.userValue}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'PICKLIST'}">
+                                    <lightning:input aura:id="inputType" type="type" value="{!acc.userValue}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'DOUBLE'}">
+                                    <lightning:input aura:id="inputDouble" type="double" value="{!acc.userValue}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'ADDRESS'}">
+                                    <lightning:input aura:id="inputAddress" type="Address" value="{!acc.userValue}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'PHONE'}">
+                                    <lightning:input aura:id="inputPhone" type="Phone" value="{!acc.userValue}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'URL'}">
+                                    <lightning:input aura:id="inputUrl" type="URL" value="{!acc.userValue}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.selectedFieldType == 'INTEGER'}">
+                                    <lightning:input aura:id="inputInt" type="integer" value="{!acc.userValue}"/>
+                                </aura:if>
+                            </td>
+                            <td>
+                                
+                                <a onclick="{!c.addCriteria}" data-record="{!index}">
+                                    <lightning:button variant="brand" label="Add Criteria" />
+                                </a>
+                                <a onclick="{!c.deleteRow}" data-record="{!index}">
+                                    <lightning:button variant="destructive" label="Delete" />
+                                </a>
+                                
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </aura:if>
+        <aura:if isTrue="{!v.isFilterd}">
+            <lightning:input aura:id="filterLogicInput" name="filterLogic" label="Filter Logic" value="{!v.filterlogic}" />    
+            <br/>
+        </aura:if>
+        <div>
+            <br/>
+            <lightning:button name="getData" label="Get Data" variant="brand" onclick="{!c.getData}" />
+        </div>
+        <div>
+            <lightning:datatable
+                                 keyField="id"
+                                 data="{! v.data }"
+                                 columns="{! v.columns }"
+                                 hideCheckboxColumn="true"/>
+        </div>
+    </div>
+</aura:component>

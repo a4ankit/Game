@@ -1,0 +1,15 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="classified" type="List"/>
+    <aura:attribute name="attribute" type="JSON"/>
+    <aura:attribute name="notclassified" type="List"/>    
+	<aura:attribute name="notclassifiedImages" type="Object"/>
+    <aura:attribute name="ClassifiedImages" type="Object"/>
+    <aura:attribute name="AllTypeImages" type="Object"/>
+    <aura:attribute name="customModel" type="Object" />
+    <ltng:require scripts="{!$Resource.tensorflowjs}" afterScriptsLoaded="{!c.doTfJs}" /> 
+    <ltng:require scripts="{!$Resource.IMAGENET_CLASSES}"  afterScriptsLoaded="{!c.doMl5}"/>
+    <lightning:input type="file" label="" name="Mapping" multiple="true" accept="image" onchange="{!c.readFolder}" />
+    <lightning:button variant="base" label="Train Model" title="Base action" onclick="{! c.doTrainModel}" class="slds-button slds-button_brand"/>
+    
+    
+</aura:component>

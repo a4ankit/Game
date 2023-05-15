@@ -1,0 +1,49 @@
+<apex:page controller="WrapperDeleteOrderAccounts" sidebar="false">
+    <script type="text/javascript">
+    function selectAllCheckboxes(obj,receivedInputID){
+        var inputCheckBox = document.getElementsByTagName("input");
+        for(var i=0; i<inputCheckBox.length; i++){
+            if(inputCheckBox[i].id.indexOf(receivedInputID)!=-1){
+                inputCheckBox[i].checked = obj.checked;
+                console.log(inputCheckBox[i].id);
+            }
+        }
+    }
+    </script>
+    <apex:form >
+        <apex:pageMessages ></apex:pageMessages>
+        <apex:selectList size="1" value="{!selectedAccId}">
+            <apex:actionSupport event="onchange" action="{!orderValNew}" >
+            </apex:actionSupport>
+            Account : <apex:selectOptions value="{!AccountList}"></apex:selectOptions>
+        </apex:selectList>
+        <apex:pageBlock id="pb" >
+            <apex:commandButton value="delete selected" action="{!deleteOrders}" reRender="pb" />
+            <apex:commandButton value="New Order" action="{!newOrders}" reRender="pb" />
+            <apex:pageblockSection id="searchBlockSection">
+                <apex:pageBlockSectionItem id="searchBlockSectionItem">
+                    <apex:outputLabel >Keyword</apex:outputLabel>
+                    <apex:panelGroup >
+                        <apex:inputtext id="searchTextBox" value="{!searchtext}"> 
+                        </apex:inputtext>
+                        <strong><apex:commandButton Id="btnSearch" action="{!search}" rerender="renderBlock" status="status" title="search" value="search"></apex:commandButton>
+                        </strong>
+                    </apex:panelGroup>
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+            <apex:pageMessages />
+            <apex:pageBlockTable value="{!Orders}" var="cont" columns="5" Id="pb1" >
+                <apex:column headerValue="select">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox onclick="selectAllCheckboxes(this,'input')"/>
+                    </apex:facet>
+                    <apex:inputCheckbox value="{!cont.check}" id="input"/>
+                </apex:column>
+                <apex:column value="{!cont.ord.OrderNumber}"/>
+                <apex:column value="{!cont.ord.TotalAmount}"/>
+                <apex:column value="{!cont.ord.Account.Name}"/>
+                <apex:column value="{!cont.ord.Status}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

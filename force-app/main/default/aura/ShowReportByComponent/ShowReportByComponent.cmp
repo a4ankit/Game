@@ -1,0 +1,14 @@
+<aura:component controller ="ShowReport">
+    <ltng:require
+                  scripts="{!$Resource.chartjs}"
+                  afterScriptsLoaded="{!c.afterScriptsLoaded}"/>
+    
+    <aura:attribute name="ready" type="Boolean" default="false"/>
+    
+    <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+        <div class="slds-p-horizontal--small slds-size--1-of-3 slds-m-top--medium">
+            <canvas aura:id="chart" height="300"></canvas>
+        </div>
+    </div>
+    
+</aura:component>

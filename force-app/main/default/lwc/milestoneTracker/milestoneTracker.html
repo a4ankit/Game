@@ -1,0 +1,63 @@
+<template>
+    <div class="slds-path-coach">
+        <div class="slds-grid">
+            <div class="slds-tabs--path" role="application">
+                <ul class="slds-tabs--path__nav items-container" role="tablist">
+                    <li class="slds-tabs--path__item slds-is-incomplete" aura:id="step1Indicator">
+                        <a class="slds-tabs--path__link" href="javascript:void(0);" style="text-decoration:none;">
+                           <span class="slds-tabs--path__title" title="1-FE Assignment">
+                               1-FE Assignment
+                            </span>
+                        </a>
+                    </li>
+                    <li class="slds-tabs--path__item slds-is-incomplete" aura:id="step2Indicator">
+                        <a class="slds-tabs--path__link" href="javascript:void(0);" style="text-decoration:none;">
+                            <span class="slds-tabs--path__title" title="2-FE PreGame">
+                                2-FE PreGame 
+                            </span>
+                        </a>
+                    </li>
+                    <!-- Show this only if dispatch in NBD type-->
+                    <div if:true={isNBDCase}>
+                        <li class="slds-tabs--path__item slds-is-incomplete" aura:id="step3Indicator">
+                            <a class="slds-tabs--path__link" href="javascript:void(0);" style="text-decoration:none;">
+                                <span class="slds-tabs--path__title" title="3-Ready for Onsite">
+                                    3-Ready for Onsite
+                                </span>
+                            </a>
+                        </li>
+                    </div>
+                    <li class="slds-tabs--path__item slds-is-incomplete" aura:id="step4Indicator">
+                        <a class="slds-tabs--path__link" href="javascript:void(0);" style="text-decoration:none;">
+                            <span class="slds-tabs--path__title" title="4-FE Checked-IN Onsite">
+                                4-FE Checked-IN Onsite
+                            </span>
+                        </a>
+                    </li>
+                    <li class="slds-tabs--path__item slds-is-incomplete" aura:id="step5Indicator">
+                        <a class="slds-tabs--path__link" href="javascript:void(0);" style="text-decoration:none;">
+                            <span class="slds-tabs--path__title" title="5-FE Checked-In Equipment">
+                                5-FE Checked-In Equipment
+                            </span>
+                        </a>
+                    </li>
+                    <li class="slds-tabs--path__item slds-is-incomplete" aura:id="step6Indicator">
+                        <a class="slds-tabs--path__link" href="javascript:void(0);" style="text-decoration:none;">
+                            <span class="slds-tabs--path__title" title="6-FE Checked-OUT from Onsite">
+                                6-FE Checked-OUT from Onsite
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button class="slds-button slds-button--brand slds-path__mark-complete slds-no-flex slds-m-horizontal--small" onclick={markAsComplete} style="border-radius: 15rem;">
+                <span id="pageID:j_id1:j_id20">
+                    <span class="timer-span" id="timerId" style="margin-left:10px;">
+                       {currentRemainTime} &nbsp; 
+                    </span> 
+                    Mark as Complete
+                </span>
+            </button>
+        </div> 
+    </div>
+</template>

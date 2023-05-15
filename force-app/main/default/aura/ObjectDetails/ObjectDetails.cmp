@@ -1,0 +1,14 @@
+<aura:component implements="force:appHostable">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    
+    <!-- Load TensorFlow.js. This is required to use coco-ssd model. -->
+    <ltng:require scripts="{!$Resorce.tfjs}"></ltng:require>
+    
+    <ltng:require scripts="{!$Resorce.cocossd11}" afterScriptsLoaded="{!c.afterScriptsLoaded}"></ltng:require>
+    
+    <!-- Replace this with your image. Make sure CORS settings allow reading the image! -->
+    <img aura:id="img" src="{!$Resource.cat}" width="200"/> 
+    <!-- Place your code in the script tag below. You can also use an external .js file -->
+    
+</aura:component>

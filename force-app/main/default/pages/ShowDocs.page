@@ -1,0 +1,20 @@
+<apex:page controller="ClassToCheckDocs" standardStylesheets="false" action="{!getContentDocs}">
+    <style>
+        .sfdc_richtext img{
+        border: 0;
+        height: 150px !important;
+        width: 300px !important;}
+    </style>
+    
+    <apex:form >
+        <apex:pageBlock mode="detail" id="block">
+            <apex:pageBlockSection title="List"> 
+                <apex:pageblockTable value="{!docs}" var="ct" id="pbtId2">       
+                    <apex:column value="{!ct.Title}" />
+                </apex:pageblockTable>
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>  
+        
+    </apex:form>  
+</apex:page>

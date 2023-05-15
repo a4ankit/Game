@@ -1,0 +1,52 @@
+<apex:page >
+    <apex:includeScript value="//code.jquery.com/jquery-1.11.1.min.js" />
+    <script>
+    function apiCall() {
+        //Get a reference to jQuery that we can work with
+        $j = jQuery.noConflict();
+        //endpoint URL
+        var weblink = "https://10ay.online.tableau.com/api/2.4/auth/signin"; 
+        var data = JSON.stringify({
+            "credentials": {
+                "name": "algoworks@couchbase.com",
+                "password": "Algoworks123!",
+                "site": {
+                    "contentUrl": "couchbase"
+                }
+            }
+        });
+        $j.ajax({
+            url: weblink,
+            type: 'POST', //Type POST or GET
+            dataType: 'json',
+            beforeSend: function(request) {
+                //Add all API Headers here if any
+                request.setRequestHeader("Content-Type", "application/json");
+                request.setRequestHeader('Accept', 'application/json');
+            },
+            crossDomain: true,
+            data: data,
+            //If Successfully executed 
+            success: function(result) {
+                //Response will be stored in result variable in the form of Object.
+                console.log('Response Result' + result);
+                
+                //Convert JSResponse Object to JSON response
+                var jsonResp = JSON.stringify(result);
+                document.getElementById("apiData").innerHTML = jsonResp;
+            },
+            
+            //If any Error occured
+            error: function(jqXHR, textStatus, errorThrown) {
+                //alert('ErrorThrown: ' + errorThrown);
+            }
+        });
+    }
+    </script>
+    <apex:form >
+        <!--call javaScript-->
+        <input type="button" value="Call API" onclick="apiCall()" />
+        <div id="apiData">
+        </div>
+    </apex:form>
+</apex:page>

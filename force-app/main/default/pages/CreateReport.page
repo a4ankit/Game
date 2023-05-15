@@ -1,0 +1,31 @@
+<apex:page controller="ReportHandler" tabstyle="Opportunity" renderAs="advanced_pdf">
+    <!--<style type="text/css">
+@page { size: landscape; }
+</style>
+<apex:sectionheader title="Opportunity Report" subtitle="Opportuities" />
+<apex:pageblock title="Opportunities" id="opportunityTable">
+<apex:pageblocktable value="{!displayOpportunities}" var="o">
+<apex:column value="{!o.Name}" />
+<apex:column value="{!o.Type}" />
+<apex:column value="{!o.Amount}" />
+<apex:column value="{!o.CloseDate}" />
+<apex:column value="{!o.ExpectedRevenue}" />
+<apex:column value="{!o.ForecastCategoryName}" />
+<apex:column value="{!o.LeadSource}" />
+<apex:column value="{!o.Probability}" />
+<apex:column value="{!o.StageName}" />
+</apex:pageblocktable>
+</apex:pageblock>-->
+    <table border="2px">
+        <apex:repeat value="{!displayOpportunities}" var="acc">
+            <tr border="0.5px">
+                <td><apex:outputText value="{!acc.Name}"/></td>
+                <td><apex:outputText value="{!acc.Id}"/></td>
+                <apex:repeat value="{!acc.Contacts}" var="cont">
+                    <tr><td><apex:outputText value="{!cont.Name}"/></td>
+                        <td><apex:outputText value="{!cont.Phone}"/></td></tr>
+                </apex:repeat>
+            </tr>
+        </apex:repeat>
+    </table>
+</apex:page>

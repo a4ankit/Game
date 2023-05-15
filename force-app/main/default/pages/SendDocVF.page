@@ -1,0 +1,3 @@
+<apex:page standardcontroller="SBQQ__Quote__c" extensions="SendToDocuSignController" showHeader="false" action="{!SendNow}">    
+    <!-- This page used to send latest generated doc to the related primary contact -->
+</apex:page>

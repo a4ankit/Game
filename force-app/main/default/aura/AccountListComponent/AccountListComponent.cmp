@@ -1,0 +1,85 @@
+<aura:component implements="force:appHostable" controller="AccountListController">
+    <aura:attribute name="searchKeyword" type="String" description="search input"/>
+    <aura:attribute name="searchKeywordSource" type="String" description="search input"/>
+    <aura:attribute name="searchKeywordIndustry" type="String" description="search input"/>
+    <aura:attribute type="List" name="Types" />
+    <aura:attribute type="List" name="Sources" />
+    <aura:attribute type="List" name="Industries" />
+    <aura:attribute type="Account[]" name="acctList"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="showSource" type="Boolean" default="true"/>
+    <aura:attribute name="showIndustry" type="Boolean" default="true"/>
+    <aura:attribute name="showActivate" type="Boolean" default="true"/>
+    <aura:attribute type="List" name="onSelectedRows" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.fetchAccounts}"/>
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <div aria-labelledby="newSearchForm" class="slds-grid">
+        <fieldset class="slds-box slds-theme--default slds-container--small">
+            <label id="newSearchForm" class="slds-text-heading--small slds-p-vertical--medium">
+                Search Accounts
+            </label>
+            <form class="slds-form--stacked">
+                <lightning:select aura:id="select" name="select1" label="Filter by Type" onchange="{! c.onChange }" required="true" >
+                    <option value="">Select</option>
+                    <aura:iteration items="{!v.Types}" var="type">
+                        <option value="{!type}" text="{!type}"></option>
+                    </aura:iteration>
+                </lightning:select>
+                <br/>
+                <br/>
+                <aura:if isTrue="{!v.showSource}">
+                    <!-- Display list of records -->
+                    <aura:set attribute="else">
+                        <div class="slds-form-element__control slds-grow" >
+                            <lightning:select name="Account Source" label="Account Source" required="true" aura:id="Source" 
+                                              messageWhenValueMissing="Select a valid value"
+                                              onchange="{! c.onChangeSource }">
+                                <option value="">Select</option>
+                                <aura:iteration items="{!v.Sources}" var="item">
+                                    <option value="{!item}" text="{!item}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                    </aura:set>
+                </aura:if>
+                <aura:if isTrue="{!v.showIndustry}">
+                    <!-- Display list of records -->
+                    <aura:set attribute="else">
+                        <div class="slds-form-element__control slds-grow" >
+                            <lightning:select name="Account Source" label="Account Industry" required="true" aura:id="Industry" 
+                                              messageWhenValueMissing="Select a valid value"
+                                              onchange="{! c.onChangeIndustry }">
+                                <option value="">Select</option>
+                                <aura:iteration items="{!v.Industries}" var="item">
+                                    <option value="{!item}" text="{!item}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </form>
+        </fieldset>
+    </div>
+    <br/>
+    <br/>
+    <aura:if isTrue="{!v.showActivate}">
+        <!-- Display list of records -->
+        <aura:set attribute="else">
+            <div class="slds-form-element__control slds-grow" >
+                <lightning:button variant="brand" label="Activate Accounts" title="Brand action" onclick="{! c.handleSave }" />
+            </div>
+        </aura:set>
+    </aura:if>
+    
+    <div class="slds-m-vertical_small">
+        <lightning:datatable data="{! v.acctList }" 
+                             columns="{! v.mycolumns }" 
+                             keyField="Id"
+                             hideCheckboxColumn="false"
+                             onrowselection="{!c.updateSelectedText}"
+                             onsort="{! c.updateColumnSorting }"                 
+                             />
+    </div>
+</aura:component>

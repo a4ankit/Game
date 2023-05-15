@@ -1,0 +1,183 @@
+<apex:page >
+    <apex:slds />
+    <html>
+    <title>Add image and train model with Ml5.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
+    <script src="https://unpkg.com/ml5@0.2.2/dist/ml5.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <head>
+        <title>Get Images</title>
+    </head>
+
+    <body style="font:15px Calibri;">
+        <p>
+            Classified:
+            <input type="file" id="file" accept="image/*" multiple="multiple" />
+            <br/>
+            <br/> Not Classified:
+            <input type="file" id="file1" accept="image/*" multiple="multiple" />
+        </p>
+
+        <p id="fp"></p>
+
+        <p>
+            <input type="submit" value="Get Classified Images" onclick="FileDetails()" />
+
+            <input type="submit" value="Get Not Classified Images" onclick="FileDetails1()" />
+        </p>
+        <div>
+            <button id="addCls">Add Classified Images</button>
+            <button id="addNon">Add Non Classified Images</button>
+            <button id="train">Train</button>
+            <span id="loss"></span>
+            <button id="save">Save</button>
+            <button id="predict">Predict</button>
+        </div>
+    </body>
+
+    <script>
+        let arrayClassifiedImg = [];
+        let arrayNonClassifiedImg = [];
+        let allImages = [];
+        let featureExtractor;
+        let classifier;
+        let loss;
+        let imgClassified;
+        let imgNonClassified;
+        function FileDetails() {
+            var fi = document.getElementById('file');
+
+            if (fi.files.length > 0) {
+
+                document.getElementById('fp').innerHTML =
+                    'Total Files: <b>' + fi.files.length + '</b></br >';
+
+                for (var i = 0; i <= fi.files.length - 1; i++) {
+                    var url = URL.createObjectURL(fi.files[i]);
+                    console.log('url', url);
+                    console.log('fi.files', fi.files.item(i));
+                    var fname = fi.files.item(i).name;
+                    var fsize = fi.files.item(i).size;
+
+                    imgClassified = new Image(224, 224);
+                    imgClassified.src = fi.files[i];
+                    imgClassified.crossOrigin = 'anonymous';
+                    console.log('imgClassified::::', imgClassified);
+                    arrayClassifiedImg.push(imgClassified);
+                    allImages.push(imgClassified);
+                    console.log('arrayClassifiedImg', arrayClassifiedImg.length);
+                    document.getElementById('fp').innerHTML =
+                        document.getElementById('fp').innerHTML + '<br /> ' +
+                        fname + ' (<b>' + fsize + '</b> bytes)';
+                }
+
+                console.log('allImages', allImages);
+            }
+        }
+        function FileDetails1() {
+            var fi = document.getElementById('file1');
+
+            if (fi.files.length > 0) {
+
+                document.getElementById('fp').innerHTML =
+                    'Total Files: <b>' + fi.files.length + '</b></br >';
+
+                for (var i = 0; i <= fi.files.length - 1; i++) {
+                    var url = URL.createObjectURL(fi.files[i]);
+                    console.log('url', url);
+                    console.log('fi.files', fi.files.item(i));
+                    var fname = fi.files.item(i).name;
+                    var fsize = fi.files.item(i).size;
+
+                    imgNonClassified = new Image(224, 224);
+                    imgNonClassified.src = fi.files[i];
+                    imgNonClassified.crossOrigin = 'anonymous';
+                    console.log('imgNonClassified::::', imgNonClassified);
+                    arrayNonClassifiedImg.push(imgNonClassified);
+                    allImages.push(imgNonClassified);
+                    console.log('arrayNonClassifiedImg', arrayNonClassifiedImg.length);
+                    document.getElementById('fp').innerHTML =
+                        document.getElementById('fp').innerHTML + '<br /> ' +
+                        fname + ' (<b>' + fsize + '</b> bytes)';
+                }
+                console.log('allImages', allImages);
+            }
+        }
+        function setup() {
+            featureExtractor = ml5.featureExtractor('MobileNet', modelReady);
+            // Create a new classifier using those features and give the video we want to use
+            classifier = featureExtractor.classification();
+            // Set up the UI buttons
+            setupButtons();
+        }
+        // A function to be called when the model has been loaded
+        function modelReady() {
+            console.log('Base Model (MobileNet) Loaded!');
+        }
+
+        function setupButtons() {
+            //Add Images
+            addImages = select('#addCls');
+            addImages.mousePressed(function () {
+                for (var i = 0; i < arrayClassifiedImg.length; i++) {
+                    classifier.addImage(arrayClassifiedImg[i], "Classified");
+                    console.log('Classified Images', arrayClassifiedImg[i]);
+                }
+            });
+
+            //Add Images
+            addImages = select('#addNon');
+            addImages.mousePressed(function () {
+                for (var i = 0; i < arrayNonClassifiedImg.length; i++) {
+                    classifier.addImage(arrayNonClassifiedImg[i], "Not Classified");
+                    console.log('Not Classified', arrayNonClassifiedImg[i]);
+                }
+            });
+            console.log('allImages', allImages.length);
+
+            // Train Button
+            train = select('#train');
+            console.log('allImages', allImages.length);
+            train.mousePressed(function () {
+                classifier.train(function (lossValue) {
+                    if (lossValue) {
+                        loss = lossValue;
+                        select('#loss').html('Loss: ' + loss);
+                        console.log('Loss:', loss);
+                    } else {
+                        console.log('Done Training! Final Loss: ' + loss);
+                    }
+                });
+            });
+
+            // Predict 
+            predictBtn = select('#predict');
+            predictBtn.mousePressed(async function () {
+                for(var j=0; j<allImages.length; j++){
+                    await classifier.classify(allImages[j], gotResults);
+                }
+            });
+
+            async function gotResults(err, results) {
+                if (err) {
+                    console.error(err);
+                }
+                if (results && results[0]) {
+                    console.log('#result', results[0].label);
+                    console.log('#confidence', results[0].confidence);
+                }
+            }
+
+
+            // Save model
+            saveBtn = select('#save');
+            saveBtn.mousePressed(function () {
+                classifier.save();
+            });
+        }
+    </script>
+
+    </html>
+</apex:page>

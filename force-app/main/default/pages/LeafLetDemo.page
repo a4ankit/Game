@@ -1,0 +1,110 @@
+<apex:page title="LeafLet MAP" sidebar="false" showHeader="false">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" />
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js" />
+        <script src="http://makinacorpus.github.io/Leaflet.Snap/leaflet.snap.js"></script>
+    <style >
+        [id*=mapid] { height: 600px; } 
+    </style>
+    <!--Map Section here-->
+    <div id="mapid"></div>
+    
+    <script>
+    console.log('L::'+L.map);
+    var mymap = L.map('mapid').setView([39.61, -105.02], 10);
+    
+    L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYTRhbmtpdCIsImEiOiJjanY3cjcyMXMwNHA4M3lyeGh0NXg0eTJiIn0.AYK_UhcQDWMPumFChsMGCQ', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 50,
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1IjoiYTRhbmtpdCIsImEiOiJjanY3cjcyMXMwNHA4M3lyeGh0NXg0eTJiIn0.AYK_UhcQDWMPumFChsMGCQ'
+    }).addTo(mymap);
+    
+    
+    var marker = L.marker([39.61, -105.02]).addTo(mymap);
+    var circle = L.circle([51.508, -0.11], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 500
+    }).addTo(mymap);
+    var polygon = L.polygon([
+        [51.509, -0.08],
+        [51.503, -0.06],
+        [51.51, -0.047]
+    ]).addTo(mymap);
+    
+    marker.bindPopup("<b>Hello Leaflet!</b><br>I am a popup.").openPopup();
+    circle.bindPopup("I am a circle.");
+    polygon.bindPopup("I am a polygon.");
+    
+    var popup = L.popup();
+    
+    function onMapClick(e) {
+        console.log("You clicked the map at " + e.latlng);
+    }
+    
+    mymap.on('click', onMapClick);
+    
+    var geojsonFeature = {
+        "type": "Feature",
+        "properties": {
+            "name": "Coors Field",
+            "amenity": "Baseball Stadium",
+            "popupContent": "This is where the Rockies play!"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [-104.99404, 39.75621]
+        }
+    };
+    console.log('geojsonFeature'+	geojsonFeature);
+    
+    
+    var myLines = [{
+        "type": "LineString",
+        "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
+    }, {
+        "type": "LineString",
+        "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
+    }];
+    
+    var myLayer = L.geoJSON().addTo(mymap);
+    myLayer.addData(geojsonFeature);
+    
+    var littleton = L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.'),
+        denver    = L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.'),
+        aurora    = L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.'),
+        golden    = L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.');
+    
+    var cities = L.layerGroup([littleton, denver, aurora, golden]).addTo(mymap);
+    
+    var toolbar = L.Toolbar();
+    toolbar.addToolbar(mymap);
+    
+    var drawnItems = new L.FeatureGroup();
+    mymap.addLayer(drawnItems);
+    
+    // Set the title to show on the polygon button
+    L.drawLocal.draw.toolbar.buttons.polygon = 'Draw a sexy polygon!';
+    
+    var drawControl = new L.Control.Draw({
+        position: 'topright',
+        draw: {
+            polyline: true,
+            polygon: true,
+            circle: true,
+            marker: true
+        },
+        edit: {
+            featureGroup: drawnItems,
+            remove: true
+        }
+    });
+    mymap.addControl(drawControl);
+    </script>
+    
+</apex:page>

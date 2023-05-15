@@ -1,0 +1,22 @@
+<apex:page controller="contactquery" >
+    <apex:pageBlock title="Export Results" >
+        <apex:pageBlockTable value="{!afeedList}" var="accountfeed">
+            <apex:column value="{!accountfeed.Body}"/>
+            <apex:column value="{!accountfeed.CommentCount}"/>
+            <apex:column value="{!accountfeed.CreatedBy.name}"/>
+            <apex:column value="{!accountfeed.CreatedDate}"/>
+            <apex:column value="{!accountfeed.InsertedBy.name}"/>
+            <apex:column value="{!accountfeed.LastModifiedDate}"/>
+            <apex:column value="{!accountfeed.LikeCount}"/>
+            <apex:column value="{!accountfeed.Parent.name}"/>
+            <apex:column value="{!accountfeed.RelatedRecordid}"/>
+            <apex:column value="{!accountfeed.SystemModstamp}"/>
+            <apex:column value="{!accountfeed.Title}"/>
+            <apex:column value="{!accountfeed.Type}"/>
+            {!FeedcomList}
+            <apex:pageBlockTable value="{!FeedcomList}" var="accountfeed3">
+                <apex:column value="{!accountfeed3.commentbody}"/>       
+            </apex:pageBlockTable>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

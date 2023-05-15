@@ -1,0 +1,23 @@
+<apex:page standardController="Account" showHeader="false" sidebar="false">
+    <apex:outputPanel rendered="{!Account.OwnerId == $User.Id}">
+        <apex:outputField value="{!Account.LastModifiedDate}"/>
+    </apex:outputPanel><br/>
+    <apex:outputPanel rendered="{!Account.OwnerId == $User.Id}">
+        <apex:outputField value="{!Account.LastModifiedDate}"/>
+    </apex:outputPanel><br/>
+    <apex:outputPanel rendered="{!Account.OwnerId == $User.Id}">
+        <apex:outputField value="{!Account.LastModifiedDate}"/>
+    </apex:outputPanel><br/>
+    <apex:outputPanel rendered="{!Account.OwnerId == $User.Id}">
+        <apex:outputField value="{!Account.LastModifiedDate}"/>
+    </apex:outputPanel><br/>
+    <apex:outputPanel rendered="{!Account.OwnerId == $User.Id}">
+        <apex:outputField value="{!Account.LastModifiedDate}"/>
+    </apex:outputPanel><br/>
+    <apex:outputPanel rendered="{!Account.OwnerId == $User.Id}">
+        <apex:outputField value="{!Account.LastModifiedDate}"/>
+    </apex:outputPanel><br/>
+    <apex:outputPanel rendered="{!Account.OwnerId == $User.Id}">
+        <apex:outputField value="{!Account.LastModifiedDate}"/>
+    </apex:outputPanel>
+</apex:page>

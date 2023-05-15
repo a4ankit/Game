@@ -1,0 +1,11 @@
+<apex:page controller="MultiselectVFPageCtrl" sidebar="false">
+    <apex:form >
+        <c:MultiselectComponent leftLabel="Available"
+                                leftOption="{!TestObjectLeftList}"
+                                rightLabel="Selected"
+                                rightOption="{!TestObjectRightList}"
+                                size="20"
+                                width="150px"
+                                showUpDownButtons="false"/>
+    </apex:form>
+</apex:page>

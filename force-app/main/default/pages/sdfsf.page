@@ -1,0 +1,17 @@
+<apex:page controller="WrapperDeleteOrderAccounts" sidebar="false">
+    <apex:form >
+        <apex:pageBlock id="pb">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="delete selected" action="{!deleteOrders}" reRender="pb" />
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            <apex:pageBlockTable value="{!Orders}" var="cont" columns="5" Id="pb1">
+                <apex:column headerValue="select">
+                    <apex:inputCheckbox value="{!cont.check}"/>
+                </apex:column>
+                <apex:column value="{!cont.ord.Id}"/>
+                <apex:column value="{!cont.ord.Status}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

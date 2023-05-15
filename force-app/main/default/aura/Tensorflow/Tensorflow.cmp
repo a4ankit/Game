@@ -1,0 +1,12 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+    <!-- Image -->
+    <img id="img" src="{!$Resource.cat}" width="400" crossorigin="anonymous"/>
+    <!--<input type='file' id="imgInp" />
+    <img id="imgshow" src="#" alt="your image" /> -->
+    <ltng:require scripts="{!$Resource.jQuery}"  
+                  afterScriptsLoaded="{!c.doInit}" />
+    
+    <ltng:require scripts="{!join(',', $Resource.tfjs1, $Resource.jQuery, $Resource.cocossd )}"  
+                  afterScriptsLoaded="{!c.jsLoaded}" />
+<canvas id="canvas" style="width: 300px; height: 300px;" />
+</aura:component>

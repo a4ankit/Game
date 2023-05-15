@@ -1,0 +1,24 @@
+<apex:page Controller="ContactSet" rendered="true" >
+    <apex:form > 	
+        <apex:pageBlock >
+            Input Id:<apex:inputText value="{!cid}"/>  
+            <apex:commandButton value="View Image" action="{!show}" />
+        </apex:pageBlock>  
+        <div style="height:150px;width:190px;">
+            <apex:pageBlock rendered="{!bb}">
+                <table border="2" bordercolor="Green">
+                    <tr> 
+                        <td>
+                            <apex:image id="theImage" value="https://ankit96-dev-ed.my.salesforce.com{!objLead.PhotoUrl}" width="150" height="150" alt="Description of image here"/>
+                        </td> 
+                    </tr>
+                    <tr> 
+                        <td align="center">
+                            <apex:outputText value="{!cid}"/>
+                        </td>
+                    </tr>
+                </table>
+            </apex:pageBlock>
+        </div>
+    </apex:form>
+</apex:page>

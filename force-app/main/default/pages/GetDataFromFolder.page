@@ -1,0 +1,164 @@
+<apex:page >
+    <html>
+        <title>Add image and train model with tensorflowJS</title> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1"> </script>
+        <script src="https://unpkg.com/@tensorflow-models/mobilenet"></script>
+    <head>
+        <title>Get File Details</title>
+    </head>
+
+    <body style="font:15px Calibri;">
+        <p>
+            <input type="file" id="file" accept="image/*" multiple="multiple" />
+        </p>
+
+        <p id="fp"></p>
+
+        <p>
+            <input type="submit" value="Show Details" onclick="FileDetails()" />
+        </p>
+    </body>
+
+    <script>
+        async function FileDetails() {
+            var fi = document.getElementById('file');
+            let imgClassified;
+            let arrayClassifiedImg = [];
+            let tensorarr = [];
+            let model;
+            model = tf.sequential();
+            if (fi.files.length > 0) {
+
+                document.getElementById('fp').innerHTML =
+                    'Total Files: <b>' + fi.files.length + '</b></br >';
+
+                for (var i = 0; i <= fi.files.length - 1; i++) {
+                    var url = URL.createObjectURL(fi.files[i]);
+                    console.log('url', url);
+                    console.log('fi.files', fi.files.item(i));
+                    var fname = fi.files.item(i).name;
+                    var fsize = fi.files.item(i).size;
+
+                    imgClassified = new Image(224, 224);
+                    imgClassified.src = fi.files[i];
+                    imgClassified.crossOrigin = 'anonymous';
+                    console.log('imgClassified::::', imgClassified);
+                    arrayClassifiedImg.push(imgClassified);
+
+                    document.getElementById('fp').innerHTML =
+                        document.getElementById('fp').innerHTML + '<br /> ' +
+                        fname + ' (<b>' + fsize + '</b> bytes)';
+                }
+                console.log('Total Images'+arrayClassifiedImg.length);
+                for (var j = 0; j < arrayClassifiedImg.length; j++) {
+                    let tensor = preprocessImage(arrayClassifiedImg[j], 'mobilenet');
+                    tensorarr.push(tensor);
+                }
+                console.log('tensorarr', tensorarr);
+                let resize_image = [];
+                let resize;
+                for (var i = 0; i < tensorarr.length; i++) {
+                    resize = tf.reshape(tensorarr[i], [1, 224, 224, 3], 'resize');
+                    console.log('resize:::', resize);
+                    resize_image.push(resize);
+                }
+                let label = [];
+                for (var k = 0; k < 5; k++) {
+                    label.push('Store Shelf');
+                }
+                for (var l = 0; l < 5; l++) {
+                    label.push('Rejected');
+                }
+                const setLabel = Array.from(new Set(label));
+                let ysarr = [];
+                const ys = tf.oneHot(tf.tensor1d(label.map((a) => setLabel.findIndex(e => e === a)), 'int32'), 10)
+                console.log('ys:::' + ys);
+                const y = tf.reshape(ys, [-1]);
+                y.print();
+                let d;
+                for (var m = 0; m < label.length; m++) {
+                    d = y.slice([m * 10], [10]);
+                    d.print();
+                    ysarr.push(d);
+                }
+
+                console.log('ysarr', ysarr);
+
+                //Adding Layers to model
+                model.add(tf.layers.conv2d({
+                    inputShape: [224, 224, 3],
+                    kernelSize: 5,
+                    filters: 8,
+                    strides: 1,
+                    activation: 'relu',
+                    kernelInitializer: 'VarianceScaling'
+                }));
+                model.add(tf.layers.maxPooling2d({ poolSize: 2, strides: 2 }));
+                model.add(tf.layers.maxPooling2d({ poolSize: 2, strides: 2 }));
+                model.add(tf.layers.flatten({}));
+                model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
+                model.add(tf.layers.dense({ units: 10, activation: 'softmax' }));
+
+                //Compiling Model
+                model.compile({
+                    loss: 'meanSquaredError',
+                    optimizer: 'sgd'
+                })
+                console.log('model:::' + model);
+0.7505475282669067
+                // Train the model using the data.
+                let tesnor_dim = [];
+                let tensr;
+                for (var j = 0; j < resize_image.length; j++) {
+                    console.log('resize_image', resize_image);
+                    tensr = tf.expandDims(ysarr[j], 0);
+                    tesnor_dim.push(tensr);
+                    console.log('tesnor_dim', tesnor_dim);
+                    console.log('before resize_image[j]', resize_image[j]);
+                    console.log('before tesnor_dim[j]', tesnor_dim[j]);
+                    await model.fit(resize_image[j], tesnor_dim[j], { epochs: 100 }).then((loss) => {
+                        console.log('resize_image.get[j]', resize_image[j]);
+                        console.log('tesnor_dim[j]', tesnor_dim[j]);
+                        console.log('loss', loss);
+                        const t = model.predict(resize_image[j]);
+                        console.log('Prediction:::' + t);
+                        pred = t.argMax(1).dataSync(); // get the class of highest probability
+                        const labelsPred = Array.from(pred).map(e => setLabel[e]);
+                        console.log('labelsPred:::' + labelsPred);
+
+                    }).catch((e) => {
+                        console.log(e.message);
+                    })
+                }    //Save Model
+                const saveResults = model.save('downloads://my-model-1');
+                console.log(saveResults);
+        }
+                        else {
+            alert('Please select a file.')
+        }
+                    }
+        //Processing Image to tensor
+        function preprocessImage(image, modelName) {
+            let tensor = tf.browser.fromPixels(image)
+                .resizeNearestNeighbor([224, 224])
+                .toFloat();
+            console.log('tensor pro:::', tensor);
+            if (modelName == undefined) {
+                return tensor.expandDims();
+            }
+            if (modelName == "mobilenet") {
+                let offset = tf.scalar(127.5);
+                console.log('offset:::', offset);
+                return tensor.sub(offset)
+                    .div(offset)
+                    .expandDims();
+            }
+            else {
+                throw new Error("UnKnown Model error");
+            }
+        }
+    </script>
+
+    </html>
+</apex:page>

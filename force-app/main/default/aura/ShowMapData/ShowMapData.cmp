@@ -1,0 +1,51 @@
+<aura:component controller="wrapperDisplayController">
+    <!--aura init handler , call js "loadData" function on component load, and display contact data on table-->   
+    <aura:handler name="init" value="{!this}" action="{!c.loadData}"/>
+    
+    <!--Declare Attributes-->  
+    <aura:attribute name="wrapperList" type="object"/>
+    <aura:attribute name="conMap" type="List"/>
+    <div class="slds-p-around--large">
+        
+        <br/>
+        <p style="color:red">Total Contacts = {!v.wrapperList.contactCount}</p>
+        <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="First Name">First Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="First Name">Last Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Department">Department</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="First Name">Lead Source</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.conMap}" var="cony" indexVar="keyy">
+                    <aura:iteration items="{!cony.value}" var="con" indexVar="key">
+                        <tr>
+                            <th scope="row">
+                                <div class="slds-truncate" title="{!con.FirstName}">{!con.FirstName}</div>
+                            </th>
+                            <th scope="row">
+                                <div class="slds-truncate" title="{!con.LastName}">{!con.LastName}</div>
+                            </th>
+                            <th scope="row">
+                                <div class="slds-truncate" title="{!con.Department}">{!con.Department}</div>
+                            </th>
+                            <th scope="row">
+                                <div class="slds-truncate" title="{!con.LeadSource}">{!con.LeadSource}</div>
+                            </th>
+                        </tr>
+                    </aura:iteration>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </div>
+</aura:component>

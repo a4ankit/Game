@@ -1,0 +1,18 @@
+<aura:component >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute access="private" name="error" type="String" default=""/>
+    <div class="slds-p-bottom_large slds-p-left_large" style="width:500px">      
+        <aura:if isTrue="{! !empty(v.error)}">
+            <ui:message title="Error" severity="error" closable="true">{!v.error}</ui:message>
+        </aura:if>
+        <lightning:recordEditForm recordId="{!v.recordId}"  objectApiName="Contact"  onsubmit="{!c.handleSubmit}" onerror="{!c.handleError}" onsuccess="{!c.handleSuccess}">
+            <lightning:messages />
+            <lightning:inputField fieldName="FirstName" />
+            <lightning:inputField fieldName="LastName" />
+            <lightning:inputField fieldName="Birthdate" />
+            <lightning:inputField fieldName="Phone" />
+            <lightning:button aura:id="submit" type="submit" label="Save record" class="slds-m-top_medium" />
+            <lightning:button aura:id="cancel" onclick="{!c.handleCancel}" label="Cancel" class="slds-m-top_medium" />
+        </lightning:recordEditForm>
+    </div>  
+</aura:component>

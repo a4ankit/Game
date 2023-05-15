@@ -1,0 +1,19 @@
+<apex:page >
+    <apex:iframe src="https://10ay.online.tableau.com/t/couchbase/views/SalesABMDashboard_0/MyActiveAccounts?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&Account%20Owner%20Name=Karthik%20Babu%20Sekar" />
+    <script src="https://ankit96-dev-ed.my.salesforce.com/soap/ajax/45.0/connection.js" type="text/javascript"/>
+    <script src="https://ankit96-dev-ed.my.salesforce.com/soap/ajax/45.0/apex.js" type="text/javascript"/>
+        <script>
+        sforce.connection.remoteFunction({
+            url : 'https://10ay.online.tableau.com/api/2.4/auth/signin',
+            headers : {"Content-Type" : "application/json","Accept" : "application/json"},
+            data : {"credentials": {"name": "algoworks@couchbase.com","password": "Algoworks123!","site": {"contentUrl": "couchbase"}}},
+            method: "POST",
+            onSuccess : function(response) {
+                console.log(response);
+            },
+            onFailure : function(response) {
+                console.log("Failed" + response);
+            }
+        });
+    </script>
+</apex:page>

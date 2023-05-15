@@ -1,0 +1,5 @@
+<aura:component >
+	<aura:attribute name="thisVariableOne" type="String" default="sonika" Access="GLOBAL"/>
+    <aura:attribute name="thisVariableTwo" type="String" default="Anshika" Access="GLOBAL"/>
+  	
+</aura:component>

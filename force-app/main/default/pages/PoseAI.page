@@ -1,0 +1,32 @@
+<apex:page >
+    <head>
+        <!-- Load TensorFlow.js -->z
+        <apex:includeScript value="{!$Resource.tfjs}"/>
+        
+        <!-- Load Posenet -->
+        
+        <apex:includeScript value="{!$Resource.posenet}"/>
+        
+    </head>
+    <h1>Image classification using MobileNet</h1>
+    <p>The MobileNet model labeled this as
+        <span id="result">...</span> with a confidence of
+        <span id="probability">...</span></p>
+    <body>
+        <img id='cat' src="{!$Resource.apple}" width ="400"/>
+    </body>
+    <!-- Place your code in the script tag below. You can also use an external .js file -->
+    <script>
+    var imageScaleFactor = 0.5;
+    var outputStride = 16;
+    var flipHorizontal = false;
+    
+    var imageElement = document.getElementById('cat');
+    
+    posenet.load().then(function(net){
+        return net.estimateSinglePose(imageElement, imageScaleFactor, flipHorizontal, outputStride)
+    }).then(function(pose){
+        console.log(pose);
+    })
+    </script>																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
+</apex:page>

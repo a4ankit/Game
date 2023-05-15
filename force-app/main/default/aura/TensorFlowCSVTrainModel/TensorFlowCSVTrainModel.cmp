@@ -1,0 +1,13 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="classified" type="List"/>
+    <aura:attribute name="notclassified" type="List"/>
+    <aura:attribute name="allImages" type="Object"/>
+    <aura:attribute name="allImagesL" type="List"/>
+	<aura:attribute name="notclassifiedImages" type="Object"/>
+    <aura:attribute name="ClassifiedImages" type="Object"/>
+    
+    <lightning:input type="file" label="" name="Mapping" multiple="false" accept=".csv" onchange="{!c.readCSV}" /><br/>
+    <lightning:button variant="base" label="Train and Save Model" title="Base action" onclick="{! c.getPrediction}" class="slds-button slds-button_brand"/>
+    <aura:attribute name="data" type="Object" />
+    <ltng:require scripts="{!$Resource.tensorflowjs}" afterScriptsLoaded="{!c.doML5js}"  />
+</aura:component>

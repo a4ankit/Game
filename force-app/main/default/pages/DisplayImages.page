@@ -1,0 +1,50 @@
+<apex:page id="pg" controller="DisplayImagesController" sidebar="false" showHeader="false">
+<script>
+    function validateRadio()
+    {
+        var elLength = document.getElementById('pg:frm:pb:pbs:pbsi:selectR');
+        var childInputElements = elLength.getElementsByTagName('input');
+        var flag = false ;
+        for(var i=0; i < childInputElements.length; i++)
+        {
+            if(childInputElements[i].checked == true)
+                {
+                    flag = true ;
+                    break
+                }
+        }
+        if(!flag)
+        {
+            alert('Please select one Picture') ;
+            return false ;
+        }
+        else
+        {
+            Validate() ;
+        }
+    }
+</script>
+<apex:form id="frm">
+    <apex:actionFunction name="Validate" action="{!SaveImage}" onComplete="alert('Picture is Applied'); window.close();" reRender=""/>
+    <apex:pageBlock id="pb" title="Contact" tabStyle="Contact">
+
+        <apex:pageBlockButtons >
+            <apex:commandButton rendered="{!IF(Items.size > 0 , true , false)}" value="Save" onClick="return validateRadio() ;"/>
+            <apex:commandButton value="Cancel" onClick="window.close() ;"/>
+        </apex:pageBlockButtons>
+
+        <apex:pageBlockSection id="pbs" title="All Images" rendered="{!IF(Items.size > 0 , true , false)}">
+            <apex:pageBlockSectionItem id="pbsi">
+                <apex:selectRadio id="selectR" value="{!selectedImage}">
+                    <apex:selectOptions id="MyRadio" value="{!Items}" />
+                </apex:selectRadio>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+
+        <apex:pageBlockSection rendered="{!IF(Items.size > 0 , false , true)}">
+            <apex:outputLabel value="No attachments to display or there is no valid image in attachments."/>
+        </apex:pageBlockSection>
+
+    </apex:pageBlock>
+</apex:form>
+</apex:page>

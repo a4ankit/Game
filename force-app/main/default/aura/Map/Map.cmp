@@ -1,0 +1,12 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader" >
+    <aura:attribute name="map" type="Object"/>
+    <aura:attribute name="map2" type="Object"/>
+    <ltng:require styles="/resource/leaflet/leaflet.css"
+                  scripts="/resource/leaflet/leaflet.js"
+                  afterScriptsLoaded="{!c.jsLoaded}" />
+    <!--<ltng:require styles="/resource/mapbox/mapbox/mapbox-gl.css"
+                  scripts="/resource/mapbox/mapbox/mapbox-gl.js"
+                  afterScriptsLoaded="{!c.mapboxLoaded}" /> -->
+    <div id="map"></div>
+    <div id="map2"></div>
+</aura:component>

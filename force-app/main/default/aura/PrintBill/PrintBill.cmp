@@ -1,0 +1,50 @@
+<aura:component controller="PrintBillController">
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+            <tr class="slds-text-title_caps">
+                <th scope="col">
+                    <div class="slds-truncate">#</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Name">Name</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="ProductCode">Product Code</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="UnitPrice">Unit Price</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="price">Price</div>
+                </th>  
+            </tr>
+        </thead> 
+        <tbody> 
+            <tr>
+                <td>
+                    {!index + 1}
+                </td>
+                <td> 
+                    <!--Input Name of product -->
+                    <lightning:input
+                                     aura:id="searchKnowledgeInput"
+                                     name="enter-search"
+                                     type="search"
+                                     onchange="{!c.onChangeSearchText}"
+                                     
+                                     />
+                </td>
+                <td> 
+                    <ui:outputText value="{!v.myText}"/>
+                </td>
+                <td  >
+                    <ui:outputText value="{!v.myText}"/>                    
+                </td>
+                <td>
+                    <ui:outputText value="{!v.myText}"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+</aura:component>

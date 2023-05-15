@@ -1,0 +1,32 @@
+<aura:component >
+    <aura:attribute name="street" type="String" default="121 Spear St."/>
+    <aura:attribute name="city" type="String" default="San Francisco"/>
+    <aura:attribute name="province" type="String" default="CA"/>
+    <aura:attribute name="country" type="String" default="US"/>
+    <aura:attribute name="postalCode" type="String" default="94105"/>
+
+    <aura:attribute name="provinceOptions" type="List" default="[]"/>
+    <aura:attribute name="countryOptions" type="List" default="[]"/>
+
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:handler name="change" value="{! v.country }" action="{! c.updateProvinces }"/>
+
+    <div style="max-width: 400px;">
+        <lightning:inputAddress
+            addressLabel="Address"
+            streetLabel="Street"
+            cityLabel="City"
+            countryLabel="Country"
+            provinceLabel="Province/State"
+            postalCodeLabel="PostalCode"
+            street="{! v.street }"
+            city="{! v.city }"
+            province="{! v.province }"
+            country="{! v.country }"
+            postalCode="{! v.postalCode }"
+            countryOptions="{! v.countryOptions }"
+            provinceOptions="{! v.provinceOptions }"
+        />
+    </div>
+    <lightning:button label="Save" onclick="{! c.handleClick }"/>
+</aura:component>

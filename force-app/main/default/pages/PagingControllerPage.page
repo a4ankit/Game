@@ -1,0 +1,33 @@
+<apex:page controller="PagingController" cache="false" showHeader="false">
+    <apex:form >
+        <apex:outputPanel >
+            <apex:pageBlock title="Account Details Page:" id="dlt">
+                <apex:pageMessages />
+                <apex:pageBlockButtons >
+                    <apex:commandButton action="{!deleteSelected}" value="Delete" oncomplete="window.top.location.reload()" reRender="dlt" />
+                    <apex:commandButton action="{!updateSelected}" value="Update" oncomplete="window.top.location.reload()" reRender="dlt"/>
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection title="Account Page Number: {!pageNumber}" columns="1" >
+                    <apex:pageBlockTable value="{!categories}" var="c">
+                        <apex:column width="25px">
+                            <apex:inputCheckbox value="{!c.checked}"/>
+                        </apex:column>
+                        <apex:column value="{!c.act.Checked__c}" headerValue="Checked"></apex:column>
+                        <apex:column value="{!c.act.Name}" headerValue="Name"></apex:column>
+                        <apex:column value="{!c.act.Type}" headerValue="Type"> </apex:column>
+                        <apex:column value="{!c.act.AccountNumber}" headerValue="AccountNumber" ></apex:column>
+                        <apex:column value="{!c.act.Website}" headerValue="Website"> </apex:column>
+                        <apex:column value="{!c.act.Industry}" headerValue="Industry"></apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:outputPanel>
+        <apex:panelGrid columns="4">
+            <apex:commandButton action="{!first}" value="First"></apex:commandButton>
+            <apex:commandButton action="{!previous}" value="Previous" rendered="{!hasPrevious}"></apex:commandButton>
+            <apex:commandButton action="{!next}" value="Next" rendered="{!hasNext}"></apex:commandButton>
+            <apex:commandButton action="{!last}" value="Last"></apex:commandButton>
+        </apex:panelGrid>
+        
+    </apex:form>
+</apex:page>

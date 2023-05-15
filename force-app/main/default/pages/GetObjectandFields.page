@@ -1,0 +1,21 @@
+<apex:page controller="ObjectFieldExplorerController" sidebar="false" showHeader="false">
+    <apex:form id="form">
+        <apex:pageBlock >
+            Base Object
+            <br/>
+            <apex:selectList value="{!selectedObject}" size="1">
+            <apex:selectOptions value="{!objectOptions}" />
+            <apex:actionSupport reRender="form" event="onchange" />
+            </apex:selectList>
+            <br/>          
+            <br/>
+            Fields
+            <br/>
+            <div>
+            <apex:selectList value="{!selectedField}" size="1">
+                <apex:selectOptions value="{!fieldOptions}" />
+            </apex:selectList>
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

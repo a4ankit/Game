@@ -1,0 +1,45 @@
+<apex:page >
+    <p>Select local CSV File:</p>
+    <input id="csv" type="file"/>
+    
+    <output id="out">
+        file contents will appear here
+    </output>
+    <script>
+    var array = [];
+    var img;
+    for (var i=0; i<3; i++) {
+            img = new Image(100,200);
+            img.src = 'https://gigwalk-uu.s3.amazonaws.com/public_uploads/0b58e0ecd3e912e94e242dbc8f00c1d408ed9e3014f584aafec213c0409d7a6a02e770a51dbcce197fe5a7641c4c27982575c7ab5fae2e56690209e025a58898/e7449f04-12eb-4b4c-9bac-96c0016314aa' ;
+    		console.log('img',img);
+        	array.push(img);
+    }
+    console.log(array);
+    
+    /*var array = [];
+    for (var i=0; i<3; i++) {
+        array[i] = {
+            var img = new Image(100,200);
+            img.src = 'https://gigwalk-uu.s3.amazonaws.com/public_uploads/0b58e0ecd3e912e94e242dbc8f00c1d408ed9e3014f584aafec213c0409d7a6a02e770a51dbcce197fe5a7641c4c27982575c7ab5fae2e56690209e025a58898/e7449f04-12eb-4b4c-9bac-96c0016314aa' ;
+        };
+    }
+    console.log(array);
+    
+    var fileInput = document.getElementById("csv"),
+        
+        readFile = function () {
+            var reader = new FileReader();
+            reader.onload = function () {
+                console.log('reader',reader);
+                var inputtext = reader;
+                var lines = inputtext.split('\n');
+                console.log('lines',lines);
+                document.getElementById('out').innerHTML = reader.result;
+            };
+            // start reading the file. When it is done, calls the onload event defined above.
+            reader.readAsBinaryString(fileInput.files[0]);
+        };
+    
+    fileInput.addEventListener('change', readFile);*/
+    </script>
+</apex:page>

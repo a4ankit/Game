@@ -1,0 +1,148 @@
+<apex:page sidebar="false" >
+    <apex:slds /> 
+    <head>
+        <title>Predict with tensorflowJS</title> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1"> </script>
+    </head>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="progress progress-bar progress-bar-striped progress-bar-animated mb-2">Loading Model</div>
+            </div>
+        </div>
+        Load Model : <input type="file" id="load" multiple="multiple" /><br/>
+        <br/>
+        <br/>
+        <div class="row">
+            Select Image : <input id ="image-selector" class="form-control border-0" type="file"/>
+        </div>
+        <br/>
+        <br/>
+        <div class="col-6">
+            <button id="predict-button" class="btn btn-dark float-right">Predict</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2>Prediction</h2>
+            <b><ol id="prediction-list"></ol></b>
+            <h2>
+                Confidance Value
+            </h2>
+            <b><ol id="confidance-value"></ol></b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2 class="ml-3">Image</h2>
+            <img id="selected-image" class="ml-3" src="" crossorigin="anonymous" width="400" height="300"/>
+        </div>
+    </div>
+    <script>
+    $(document).ready()
+    {
+        $('.progress-bar').hide();
+    }
+    $("#image-selector").change(function(){
+        let reader = new FileReader();
+        reader.onload = function(){
+            let dataURL = reader.result;
+            $("#selected-image").attr("src",dataURL);
+            $("#prediction-list").empty();
+            $("#confidance-value").empty();
+        }
+        let file = $("#image-selector").prop('files')[0];
+        reader.readAsDataURL(file);
+    });
+    
+    $("#model-selector").ready(function(){
+        loadModel($("#model-selector").val());
+        $('.progress-bar').show();
+    })
+    
+    let model;
+    let cutomModelJson;
+    let cutomModelbin;
+    async function loadModel(name){
+        $("#load").change(async function(){
+            for (var i = 0; i < $(this).get(0).files.length; ++i) {
+                console.log('AllFiles:::'+JSON.stringify($(this).get(0).files[i]));
+                if($(this).get(0).files[i].name == 'my-model-1.json'){
+                    cutomModelJson = $(this).get(0).files[i];
+                }else{
+                    cutomModelbin = $(this).get(0).files[i];
+                }
+            }
+            console.log('cutomModelJson::'+cutomModelJson.name+'cutomModelbin::'+cutomModelbin.name);
+            model = await tf.loadModel(tf.io.browserFiles([cutomModelJson, cutomModelbin]));
+            
+            console.log('model'+JSON.stringify(model));
+        });
+    }
+    
+    $("#predict-button").click(async function(){
+        let image= $('#selected-image').get(0);
+        console.log('image',image);
+        let label = [];
+        for(var k = 0; k< 40; k++){
+            label.push('Store Shelf');
+        }
+        for(var l = 0; l< 10; l++){
+            label.push('Rejected');
+        }
+        console.log('label:::'+label);
+        const setLabel = Array.from(new Set(label));
+        let tensor = preprocessImage(image,$("#model-selector").val());
+        const resize_image = tf.reshape(tensor, [1, 224, 224, 3],'resize');
+        console.log('tensor',tensor);
+        console.log('resize_image',resize_image);
+        console.log('model1',model);
+        let prediction =  await model.predict(tensor);
+        console.log('prediction:::'+ prediction.max());
+        var str = prediction.max().toString();
+        var res1 = str.replace("Tensor", "");
+        console.log('res1::'+res1);
+        pred = prediction.argMax(1).dataSync(); 
+        const labelsPred = Array.from(pred).map(e => setLabel[e]);
+        console.log('labelsPred:::'+ labelsPred);
+        let top5 = Array.from(prediction)
+        .map(function(p,i){
+            return {
+                probability: p,
+                className: prediction[i]
+            };
+        }).sort(function(a,b){
+            return b.probability-a.probability;
+        }).slice(0,1);
+        $("#confidance-value").empty();
+        $("#confidance-value").append(res1);
+        $("#prediction-list").empty();
+        $("#prediction-list").append(labelsPred);
+    });
+    
+    function preprocessImage(image,modelName)
+    {
+        let tensor=tf.browser.fromPixels(image)
+        .resizeNearestNeighbor([224,224])
+        .toFloat();
+        console.log('tensor pro', tensor);
+        if(modelName==undefined)
+        {
+            return tensor.expandDims();
+        }
+        if(modelName=="mobilenet")
+        {
+            let offset=tf.scalar(127.5);
+            console.log('offset',offset);
+            return tensor.sub(offset)
+            .div(offset)
+            .expandDims();
+        }
+        else
+        {
+            throw new Error("UnKnown Model error");
+        }
+    }
+    </script>
+</apex:page>

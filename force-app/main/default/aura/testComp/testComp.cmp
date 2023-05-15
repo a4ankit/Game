@@ -1,0 +1,9 @@
+<aura:component >
+    <aura:attribute name="output" type="String"/>
+    <ui:inputText label="First Name" aura:id="fname" placeholder="1,2..."/>
+    <ui:inputText label="Last Name" aura:id="lname" placeholder="1,2..."/>
+    <ui:button label="Output Name" aura:id="outputname" press="{!c.getOutput}"/>
+    <ui:outputText aura:id="output" value="" />
+        {!v.output}
+
+</aura:component>

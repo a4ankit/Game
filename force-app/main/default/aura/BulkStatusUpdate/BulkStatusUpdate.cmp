@@ -1,0 +1,79 @@
+<aura:component controller="BulkStatusUpdateController" implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="contactList" type="Contact[]"/>
+    <aura:attribute name="selectedContactList" type="Contact[]"/>
+    <aura:attribute name="FilteredContactList" type="Contact[]"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <aura:attribute name="maxRowSelection" type="Integer" default="5"/>
+    <aura:attribute name="sortBy" type="String"/>
+    <aura:attribute name="sortDirection" type="String"/>
+    <aura:attribute name="statusPicklistValues" type="Object"/>
+    <aura:attribute name="selectedStatusValue" type= "String"/>
+    <aura:attribute name="InputFilterValue" type="String" />
+    <aura:attribute name="selectedFilterType" type="String" />
+    <div class="c-container">
+        <lightning:layout multipleRows="true">
+             <lightning:layoutItem padding="around-small" size="12">
+               <lightning:card variant="Narrow" title="inputKeywordFilter" >
+                    <aura:set attribute="title">
+                        <div class="page-section page-header">
+                            <center><h1>Selected Rows: {! v.selectedRowsCount }
+                                &nbsp;&nbsp;<lightning:button disabled="{!!v.selectedRowsCount > 0}" variant="brand" label="Update Status" title="Click to Update Status" onclick="{!c.doStatusUpdate}" />
+                            </h1>
+                            </center>
+                        </div>
+                    </aura:set>
+                </lightning:card>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="9">
+                <div class="page-section page-right">
+                    <h2>DataTable section</h2>
+                    <lightning:datatable
+                                         columns="{!v.columns}"
+                                         data="{! v.contactList}"
+                                         keyField="id"
+                                         sortedBy="{!v.sortBy}"
+                                         sortedDirection="{!v.sortDirection}"
+                                         maxRowSelection="{! v.maxRowSelection }"
+                                         onsort="{!c.handleSort}"
+                                         onrowselection="{! c.updateSelectedText }"/>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="3">
+                <div class="page-section page-right">
+                    <h2>Filter section</h2>
+                    <lightning:card  variant="Narrow" title="chooseFilterType" >
+                        <aura:set attribute="title">
+                            <lightning:select name="chooseFilterType" aura:id="filterTypeID" label="Choose Filter Type" value="{!v.selectedFilterType}">           
+                                <option value="--None--">--None--</option>
+                                <option value="Status Picklist">Status Picklist</option>
+                                <option value="Search Keyword">Search Keyword</option>
+                            </lightning:select>
+                        </aura:set>
+                    </lightning:card>
+                    <aura:if isTrue="{!v.selectedFilterType == 'Status Picklist'}">
+                        <lightning:card variant="Narrow" title="inputKeywordFilter" >
+                            <aura:set attribute="title">
+                                <lightning:layoutItem padding="around-small">
+                                    <lightning:select name="Status" aura:id="StatusID" label="Choose Status" value="{!v.selectedStatusValue}">           
+                                        <aura:iteration items="{!v.statusPicklistValues}" var="item">
+                                            <option value="{!item}">{!item}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem padding="around-small">
+                                    <lightning:button variant="brand" label="Filter Data" title="Get Filter by Status" onclick="{!c.doFilterByStatus}" />
+                                </lightning:layoutItem>
+                            </aura:set>
+                        </lightning:card>
+                    </aura:if>
+                    <aura:if isTrue="{!v.selectedFilterType == 'Search Keyword'}">
+                        <lightning:input type="text" onchange="{!c.filterInput}" value="{!v.InputFilterValue}" label="Please enter searching keyword" />
+                    </aura:if>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    <div aura:id="showChildModal" ></div>
+</aura:component>

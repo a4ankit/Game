@@ -1,0 +1,13 @@
+<apex:page standardController="Account">
+    <apex:includeScript value="{!$Resource.countries}"/>
+    Select Country (with states):   <select id="country" name ="country"></select> 
+    <br/>
+    Select State: <select name ="state" id ="state"></select>  
+    
+    <script language="javascript">
+    populateCountries("country", "state"); // first parameter is id of country drop-down and second parameter is id of state drop-down
+    </script>
+    <apex:outputText value="{0, number, 000,000.00}">
+       <apex:param value="{!17.5}" />
+ </apex:outputText>
+</apex:page>

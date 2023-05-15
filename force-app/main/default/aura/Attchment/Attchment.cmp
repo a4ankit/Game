@@ -1,0 +1,50 @@
+<aura:component controller="wrapperCustomObjCtrCmp" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:isUrlAddressable" access="global" >
+    
+    <aura:attribute name="wrapListItems" type="Account[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recSelectId" type="String" default=""/>
+    
+    
+    <aura:attribute name="accept" type="List" default="['.jpg', '.jpeg','.pdf']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    <aura:attribute name="disabled" type="Boolean" default="false"/>
+    
+    
+    <div class="slds slds-p-horizontal--medium">
+        <table class="slds-table slds-table--bordered slds-table--col-bordered" style="border-collapse:collapse;">
+            <thead> 
+                <tr>
+                    <th>Record Id</th>
+                    <th>Student Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Upload File</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.wrapListItems}" var="wrapVar" indexVar="index">
+                    <tr id="{!wrapVar.recStudentId}">
+                        <td>{!wrapVar.recStudentId}</td>
+                        <td>{!wrapVar.studentName}</td>
+                        <td>{!wrapVar.studentAddress}</td>
+                        <td>{!wrapVar.studentEmail}</td>
+                        <td>
+                            <lightning:fileUpload
+                                                  multiple="{!v.multiple}" 
+                                                  accept="{!v.accept}"
+                                                  recordId="{!wrapVar.recStudentId}" 
+                                                  onuploadfinished="{!c.uploadFileAction}" disabled="{!v.disabled}"/>
+                        </td>
+                        <td>
+                            <aura:if isTrue="{!wrapVar.checkAttachFile}"> 
+                                <lightning:buttonIcon  tabindex="{!wrapVar.recStudentId}" iconName="utility:upload" name="{!wrapVar.recStudentId}" variant="bare" onclick="{!c.navigateAttachFile}"/>
+                            </aura:if>
+                        </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </div>
+    
+</aura:component>

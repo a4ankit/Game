@@ -1,0 +1,3 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes">
+    <iframe src="https://ankit96-dev-ed--devsfdx.ap5.visual.force.com/apex/Game"/>
+</aura:component>

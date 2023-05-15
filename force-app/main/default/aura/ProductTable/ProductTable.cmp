@@ -1,0 +1,79 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="SearchProductController" >
+    
+    <aura:attribute name="searchKeyword" type="String" description="search input"/>
+    <aura:attribute name="TotalNumberOfRecords" type="integer" default="0" description="display Total Number of records"/>
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+    <aura:attribute name="objClassController" type="SearchProductController"/>
+    
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    
+    <!-- SHOW LOADING SPINNER--> 
+    <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-hide" />
+    
+    <div aria-labelledby="newSearchForm" class="slds-grid">
+        <!-- BOXED AREA -->
+        <fieldset class="slds-box slds-theme--default slds-container--small">
+            
+            <label id="newSearchForm" class="slds-text-heading--small
+                                             slds-p-vertical--medium">
+                Search Products
+            </label>
+            
+            <form class="slds-form--stacked">
+                
+                <lightning:select aura:id="selectfilter" name="select1" label="Filter by" onchange="{! c.onChange }" required="true" >
+                    <option value="Product Code">Product Code</option>
+                    <option value="Product Name">Product Name</option>
+                </lightning:select>
+                
+                <lightning:input value="{!v.searchKeyword}"
+                                 required="true"
+                                 placeholder="search Products.."
+                                 aura:id="searchField"
+                                 label="Enter Value"/>
+                
+                
+                <lightning:button onclick="{!c.Search}"
+                                  class="slds-m-top--medium"
+                                  variant="brand"
+                                  label="Search"
+                                  iconName="utility:search"/>
+                
+                <br></br>
+                <div class="slds-form-element__control slds-grow" >
+                    <lightning:select name="VendorId" label="Vendor Id" required="true" aura:id="VendorId"
+                                      messageWhenValueMissing="Select a valid value">
+                        <option value="">Select</option>
+                        <aura:iteration items="{!v.objClassController.result}" var="item">
+                            <option value="{!item}" text="{!item}"></option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                
+            </form>
+        </fieldset>
+    </div>
+    
+    <div class="slds-m-vertical_small">
+        <aura:if isTrue="{!v.objClassController.returnList.length >0}">
+            <h1 class="slds-m-vertical_small"><b>Total Rows: {! v.objClassController.returnList.length }</b></h1>
+            
+            <aura:set attribute="else">
+                <h1 class="slds-m-vertical_small"><b>Total Rows: 0</b></h1>
+            </aura:set>
+        </aura:if>
+        <h1 class="slds-m-vertical_small"><b>Selected Rows: {! v.selectedRowsCount }</b></h1>
+        
+        
+        <lightning:datatable data="{! v.objClassController.returnList }"
+                             columns="{! v.mycolumns }"
+                             aura:id="avreltable"                 
+                             onrowselection="{!c.updateSelectedText}"
+                             onsort="{! c.updateColumnSorting }"                 
+                             keyField="Id"/>
+        
+    </div>
+    
+</aura:component>

@@ -1,0 +1,39 @@
+<apex:page controller="AccountOrderController">
+    <apex:slds />
+    <script type="text/javascript">
+    function selectAllCheckboxes(obj,receivedInputID){
+        var inputCheckBox = document.getElementsByTagName("input");
+        for(var i=0; i<inputCheckBox.length; i++){
+            if(inputCheckBox[i].id.indexOf(receivedInputID)!=-1){
+                inputCheckBox[i].checked = obj.checked;
+                console.log(inputCheckBox[i].id);
+            }
+        }
+    }
+    </script>
+    <apex:form >
+        <apex:pageBlock id="PageBlockSection">
+            <apex:pageMessages ></apex:pageMessages>
+            <apex:selectList size="1" value="{!selectedAccId}">
+                <apex:actionSupport event="onchange" action="{!orderValNew}" >
+                </apex:actionSupport>
+                <apex:selectOptions value="{!AccountList}"></apex:selectOptions>
+            </apex:selectList>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Deleted Selected" action="{!closePopup}" rerender="tstpopup"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!wrapOrderList}" var="Wrap" id="table" title="All Orders">
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:inputCheckbox onclick="selectAllCheckboxes(this,'input')"/>
+                    </apex:facet>
+                    <apex:inputCheckbox value="{!Wrap.Checkbox}" id="input"/>
+                    <br/>
+                </apex:column>
+                <apex:column value="{!Wrap.Ord.Name}" />
+                <apex:column value="{!Wrap.Ord.Id}" />
+                <apex:column value="{!Wrap.Ord.Status}" />
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

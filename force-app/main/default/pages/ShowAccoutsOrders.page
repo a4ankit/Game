@@ -1,0 +1,71 @@
+<apex:page controller="BulkStatusUpdateController">
+    <apex:slds />
+    <script type="text/javascript">
+    function selectAllCheckboxes(obj,receivedInputID){
+        var inputCheckBox = document.getElementsByTagName("input");
+        for(var i=0; i<inputCheckBox.length; i++){
+            if(inputCheckBox[i].id.indexOf(receivedInputID)!=-1){
+                inputCheckBox[i].checked = obj.checked;
+                console.log(inputCheckBox[i].id);
+            }
+        }
+    }
+    </script>
+    <style type="text/css">
+        .custPopup{
+        background-color: white;
+        border-width: 2px;
+        border-style: solid;
+        z-index: 9999;
+        left: 50%;
+        padding:10px;
+        position: absolute;
+        /* These are the 3 css properties you will need to change so the popup 
+        displays in the center of the screen. First set the width. Then set 
+        margin-left to negative half of what the width is. You can add 
+        the height property for a fixed size pop up if you want.*/
+        width: 500px;
+        margin-left: -250px;
+        top:100px;
+        }
+        .popupBackground{
+        background-color:black;
+        opacity: 0.20;
+        filter: alpha(opacity = 20);
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: 0;
+        left: 0;
+        z-index: 9998;
+        }
+    </style>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Update Selected" action="{!showPopup}" rerender="tstpopup"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!wrapContactList}" var="accWrap" id="table" title="All Accounts">
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:inputCheckbox onclick="selectAllCheckboxes(this,'input')"/>
+                    </apex:facet>
+                    <apex:inputCheckbox value="{!accWrap.Checkbox}" id="input"/>
+                    <br/>
+                </apex:column>
+                <apex:column value="{!accWrap.con.Name}" />
+                <apex:column value="{!accWrap.con.Email}" />
+                <apex:column value="{!accWrap.con.Status__c}" />
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <apex:outputPanel id="tstpopup">
+            <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUp}"/>
+            <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUp}">
+                <apex:selectList multiselect="false" size="1" >
+                    <apex:selectOptions value="{!getDropdowns}"/>
+                </apex:selectList>
+                <apex:commandButton value="Close" action="{!closePopup}" rerender="tstpopup"/>
+            </apex:outputPanel>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>
